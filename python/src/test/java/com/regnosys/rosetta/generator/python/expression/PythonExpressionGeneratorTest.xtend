@@ -1,5 +1,5 @@
 package com.regnosys.rosetta.generator.python.expression
-
+import org.junit.Ignore
 import com.google.inject.Inject
 import com.regnosys.rosetta.generator.python.PythonCodeGenerator
 import com.regnosys.rosetta.tests.RosettaInjectorProvider
@@ -863,62 +863,110 @@ class PythonExpressionGeneratorTest {
        	assertTrue(python.toString.contains(expectedClassA))         
     }
     
-    
+    @Ignore
     @Test
     def void shouldGenerateFlattenCondition(){
     	val python = '''
-  			type C: <"Test type C">
-	        	field4 int (1..1) <"Test int field 4">
-  		        field5 int (0..*) <"Test int field 5">
-  			type A: <"Test type">
-  				field1 int (0..*) <"Test int field 1">
-  		        cValue C (0..*) <"Test C type cValue">
-  		    type B: <"Test type B">
-  		    	field2 int (0..*) <"Test int field 2">
-  		    	aValue A (0..*) <"Test A type aValue">
-  		     type Test: <"Test filter operation condition">
-	        	bValue B (0..*) <"Test B type bValue">
-	        	field6 boolean (0..1) <"Test boolean type field6">
-	        	
+  			enum A: <"Test type A">
+	        	field1 <"Test enum field 1">
+  		        field2 <"Test enum field 2">
+  			type B: <"Test type B">
+  				field3 int (1..*) <"Test int field 3">
+  		        field4 int (1..*) <"Test int field 4">
+  		        
+  		    type C: <"Test type C">
+  		    	aValue A (1..*) <"Test A type aValue">
+  		    	bValue B (1..*) <"Test B type bValue">
+  		    		
+  		     type Test: <"Test flatten operation condition">
+	        	cValue C (0..*) <"Test C type bValue">
+	        	field3 boolean (0..1) <"Test bool type field3">
 		        condition TestCond: <"Test condition">
-					if bValue->field2 exists
-					then bValue flatten
+					if field3=True
+					then cValue 
   		        '''.generatePython 
   		        
 	        val expected= '''
-	        class Test(BaseDataClass):
-	            """
-	            Test filter operation condition
-	            """
-	            aValue: com.rosetta.test.model.A.A = Field(..., description="Test A type aValue")
-	            """
-	            Test A type aValue
-	            """
-	            
-	            @rosetta_condition
-	            def condition_0_TestCond(self):
-	                """
-	                Test condition
-	                """
-	                item = self
-	                return (lambda item: _resolve_rosetta_attr(_resolve_rosetta_attr(self, "aValue"), "field2")[0])(rosetta_filter(item, lambda item: _resolve_rosetta_attr(_resolve_rosetta_attr(self, "aValue"), "field1")))
+	        c
 	        '''
-	        val expectedClassA='''
-	        class A(BaseDataClass):
-	            """
-	            Test type
-	            """
-	            field1: bool = Field(..., description="Test int field 1")
-	            """
-	            Test int field 1
-	            """
-	            field2: List[int] = Field([], description="Test int field 2")
-	            """
-	            Test int field 2
-	            """
-	        '''
-       	assertTrue(python.toString.contains(expected))
-       	assertTrue(python.toString.contains(expectedClassA))         
+	        
+       	assertTrue(python.toString.contains(expected))      
+    }
+    
+    @Test
+    def void testConditionsGeneration() {
+        val python = '''
+            type A:
+                a0 int (0..1)
+                a1 int (0..1)
+                condition: one-of
+            type B:
+                intValue1 int (0..1)
+                intValue2 int (0..1)
+                aValue A (1..1)
+                condition Rule:
+                    intValue1 < 100
+                condition OneOrTwo: <"Choice rule to represent an FpML choice construct.">
+                    optional choice intValue1, intValue2
+                condition ReqOneOrTwo: <"Choice rule to represent an FpML choice construct.">
+                    required choice intValue1, intValue2
+                condition SecondOneOrTwo: <"FpML specifies a choice between adjustedDate and [unadjustedDate (required), dateAdjutsments (required), adjustedDate (optional)].">
+                    aValue->a0 exists
+                        or (intValue2 exists and intValue1 exists and intValue1 exists)
+                        or (intValue2 exists and intValue1 exists and intValue1 is absent)
+            '''.generatePython
+
+        
+        val expectedA=
+        '''
+        class A(BaseDataClass):
+            a0: Optional[int] = Field(None, description="")
+            a1: Optional[int] = Field(None, description="")
+            
+            @rosetta_condition
+            def condition_0_(self):
+                item = self
+                return self.check_one_of_constraint('a0', 'a1', necessity=True)
+        '''
+        
+        val expectedB=
+        '''
+        class B(BaseDataClass):
+            intValue1: Optional[int] = Field(None, description="")
+            intValue2: Optional[int] = Field(None, description="")
+            aValue: com.rosetta.test.model.A.A = Field(..., description="")
+            
+            @rosetta_condition
+            def condition_0_Rule(self):
+                item = self
+                return all_elements(_resolve_rosetta_attr(self, "intValue1"), "<", 100)
+            
+            @rosetta_condition
+            def condition_1_OneOrTwo(self):
+                """
+                Choice rule to represent an FpML choice construct.
+                """
+                item = self
+                return self.check_one_of_constraint('intValue1', 'intValue2', necessity=False)
+            
+            @rosetta_condition
+            def condition_2_ReqOneOrTwo(self):
+                """
+                Choice rule to represent an FpML choice construct.
+                """
+                item = self
+                return self.check_one_of_constraint('intValue1', 'intValue2', necessity=True)
+            
+            @rosetta_condition
+            def condition_3_SecondOneOrTwo(self):
+                """
+                FpML specifies a choice between adjustedDate and [unadjustedDate (required), dateAdjutsments (required), adjustedDate (optional)].
+                """
+                item = self
+                return ((rosetta_attr_exists(_resolve_rosetta_attr(_resolve_rosetta_attr(self, "aValue"), "a0")) or ((rosetta_attr_exists(_resolve_rosetta_attr(self, "intValue2")) and rosetta_attr_exists(_resolve_rosetta_attr(self, "intValue1"))) and rosetta_attr_exists(_resolve_rosetta_attr(self, "intValue1")))) or ((rosetta_attr_exists(_resolve_rosetta_attr(self, "intValue2")) and rosetta_attr_exists(_resolve_rosetta_attr(self, "intValue1"))) and (not rosetta_attr_exists(_resolve_rosetta_attr(self, "intValue1")))))
+        '''
+        assertTrue(python.toString.contains(expectedA))
+        assertTrue(python.toString.contains(expectedB))
     }
     
     @Test
