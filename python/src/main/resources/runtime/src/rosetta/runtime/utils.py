@@ -191,6 +191,8 @@ class BaseDataClass(BaseModel):
     meta: dict | None = None
     address: MetaAddress | None = None
 
+    def __repr__(self):
+        return f"<{self.__class__.__name__}>"
     def validate_model(self,
                        recursively: bool = True,
                        raise_exc: bool = True,
@@ -300,6 +302,54 @@ class BaseDataClass(BaseModel):
             )
 
         attr.append(value)
+
+    def resolve_references(self):
+        """
+        Initiates the recursive resolution of references using the model's own data.
+        This function should be called after the model has been fully instantiated and populated with data.
+        """
+        # Create a dictionary to store all global key mappings
+        global_key_dict = {}
+        self._build_global_key_dict(None, global_key_dict)
+
+        # Resolve references using the global key dictionary
+        self._resolve_references_recursive(None, None, global_key_dict)
+
+    def _build_global_key_dict(self, parent_element, global_key_dict):
+        """
+        Recursively traverses the model's data structure to build the global key dictionary.
+        """
+        for attr_name in self.__fields__.keys():
+            attr_value = getattr(self, attr_name)
+            if isinstance(attr_value, BaseDataClass):
+                attr_value._build_global_key_dict(self, global_key_dict)
+            elif isinstance(attr_value, list):
+                for item in attr_value:
+                    if isinstance(item, BaseDataClass):
+                        item._build_global_key_dict(self, global_key_dict)
+            elif isinstance(attr_value, dict) and 'globalKey' in attr_value:
+                global_key = attr_value['globalKey']
+                global_key_dict[global_key] = self
+
+    def _resolve_references_recursive(self, parent, attr_name, global_key_dict):
+        """
+        Recursively traverses the model's data structure to resolve references using the global key dictionary.
+        """
+        for attr in self.__fields__.keys():
+            attr_value = getattr(self, attr)
+            if isinstance(attr_value, BaseModel):
+                if hasattr(attr_value, '_resolve_references_recursive'):
+                    attr_value._resolve_references_recursive(self, attr, global_key_dict)
+            elif isinstance(attr_value, list):
+                for item in attr_value:
+                    if isinstance(item, BaseModel):
+                        if hasattr(item, '_resolve_references_recursive'):
+                            item._resolve_references_recursive(self, attr, global_key_dict)
+            elif attr == 'globalReference':
+                global_reference = getattr(self, attr)
+                if global_reference in global_key_dict:
+                    resolved_reference = global_key_dict[global_reference]
+                    setattr(parent, attr_name, resolved_reference)
 
 
 def _validate_conditions_recursively(obj, raise_exc=True):
