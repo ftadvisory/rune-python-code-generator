@@ -241,14 +241,12 @@ class ModelObjectGeneratorTest {
     }
 
     @Test
-    @Disabled
-    def void shouldImplementGlobalKeyWhenDefined() {
-        '''
+    def void shouldBeClassWithKeyWhenKeyWhenDefined() {
+        val python ='''
             type WithGlobalKey:
                 [metadata key]
                 bar string (1..1)
         '''.generatePython
-
 
     }
 

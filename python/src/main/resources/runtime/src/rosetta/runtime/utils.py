@@ -23,11 +23,15 @@ __all__ = ['if_cond', 'if_cond_fn', 'Multiprop', 'rosetta_condition',
            'check_cardinality',
            'AttributeWithMeta',
            'AttributeWithAddress',
+           'AttributeWithLocation',
            'AttributeWithReference',
            'AttributeWithMetaWithAddress',
            'AttributeWithMetaWithReference',
            'AttributeWithAddressWithReference',
-           'AttributeWithMetaWithAddressWithReference']
+           'AttributeWithMetaWithAddressWithReference',
+           'AttributeWithScheme',
+           'AttributeWithMetaWithScheme',
+           'ClassWithKey']
 
 
 def if_cond(ifexpr, thenexpr: str, elseexpr: str, obj: object):
@@ -53,9 +57,10 @@ def _to_list(obj) -> list | tuple:
 def _is_meta(obj: Any) -> bool:
     '''Returns true if it is a meta data with embedded rosetta type.'''
     return isinstance(
-        obj, (AttributeWithMeta, AttributeWithAddress,
+        obj, (AttributeWithMeta, AttributeWithReference, AttributeWithScheme, AttributeWithAddress,
               AttributeWithMetaWithAddress, AttributeWithMetaWithReference,
-              AttributeWithMetaWithAddressWithReference))
+              AttributeWithMetaWithAddressWithReference, ClassWithKey, AttributeWithLocation,
+              AttributeWithMetaWithScheme))
 
 
 def _resolve_rosetta_attr(obj: Any | None,
@@ -103,6 +108,7 @@ class Multiprop(list):
     ''' A class allowing for dot access to a attribute of all elements of a
         list.
     '''
+
     def __getattr__(self, attr):
         # return multiprop(getattr(x, attr) for x in self)
         res = Multiprop()
@@ -127,11 +133,13 @@ def rosetta_condition(condition):
     @wraps(condition)
     def wrapper(*args, **kwargs):
         return condition(*args, **kwargs)
+
     return wrapper
 
 
 def rosetta_local_condition(registry: dict):
     '''Registers a condition function in a local registry.'''
+
     def decorator(condition):
         path_components = condition.__qualname__.split('.')
         path = '.'.join([condition.__module__ or ''] + path_components)
@@ -140,6 +148,7 @@ def rosetta_local_condition(registry: dict):
         @wraps(condition)
         def wrapper(*args, **kwargs):
             return condition(*args, **kwargs)
+
         return wrapper
 
     return decorator
@@ -193,6 +202,7 @@ class BaseDataClass(BaseModel):
 
     def __repr__(self):
         return f"<{self.__class__.__name__}>"
+
     def validate_model(self,
                        recursively: bool = True,
                        raise_exc: bool = True,
@@ -330,6 +340,7 @@ class BaseDataClass(BaseModel):
             elif isinstance(attr_value, dict) and 'globalKey' in attr_value:
                 global_key = attr_value['globalKey']
                 global_key_dict[global_key] = self
+                #setattr(ClassWithKey, ClassWithKey.globalKey, global_key)
 
     def _resolve_references_recursive(self, parent, attr_name, global_key_dict):
         """
@@ -399,6 +410,18 @@ class AttributeWithMeta(BaseModel, Generic[ValueT]):
     value: ValueT
 
 
+class AttributeWithScheme(BaseModel, Generic[ValueT]):
+    '''Meta support'''
+    link: str | None = None
+    value: ValueT
+
+
+class AttributeWithLocation(BaseModel, Generic[ValueT]):
+    '''Meta support'''
+    meta: dict | None = None
+    value: ValueT
+
+
 class AttributeWithAddress(BaseModel, Generic[ValueT]):
     '''Meta support'''
     address: MetaAddress | None = None
@@ -415,6 +438,13 @@ class AttributeWithMetaWithAddress(BaseModel, Generic[ValueT]):
     '''Meta support'''
     meta: dict | None = None
     address: MetaAddress | None = None
+    value: ValueT
+
+
+class AttributeWithMetaWithScheme(BaseModel, Generic[ValueT]):
+    '''Meta support'''
+    link: str | None = None
+    meta: dict | None = None
     value: ValueT
 
 
@@ -440,6 +470,12 @@ class AttributeWithMetaWithAddressWithReference(BaseModel, Generic[ValueT]):
     address: MetaAddress | None = None
     externalReference: str | None = None
     globalReference: str | None = None
+    value: ValueT
+
+
+class ClassWithKey(BaseModel, Generic[ValueT]):
+    '''Meta support'''
+    globalKey: str | None = None
     value: ValueT
 
 

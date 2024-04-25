@@ -35,15 +35,22 @@ class PythonModelObjectGenerator {
             var is_ref = false;
             var is_address = false;
             var is_meta = false;
+            var is_scheme= false;
+            var is_location=false;
             for (ExpandedAttribute meta : attribute.getMetas()) {
                 val mname = meta.getName();
                 if (mname == "reference") { 
                     is_ref = true;
                 } else if (mname == "address") {
                     is_address = true;
-                } else if (mname == "key" || mname == "id" || mname == "scheme" || mname == "location") {
+                } else if (mname == "scheme"){
+                	is_scheme=true;
+                } else if (mname == "id") {
                     is_meta = true;
-                } else {
+                }else if (mname == "location"){
+                	is_location=true;
+                }
+                else {
                     helper_class += "---" + mname + "---";
                 }
             }
@@ -56,7 +63,13 @@ class PythonModelObjectGenerator {
             if (is_ref) {
                 helper_class += "WithReference";
             }
-            if (is_meta || is_address) {
+            if (is_scheme){
+            	helper_class += "WithScheme";
+            }
+            if (is_location){
+            	helper_class += "WithLocation";
+            }
+            if (is_meta || is_address || is_scheme) {
                 helper_class += "[" + basicType + "]";
             }
 
@@ -131,6 +144,18 @@ class PythonModelObjectGenerator {
 
         return imports.toSet.toList
     }
+    
+     private def hasKeys(Data c){
+     	var returnStr="ClassWithKey";
+	 val attr = c.allExpandedAttributes.filter[enclosingType == c.name].filter [
+        (it.name !== "reference") && (it.name === "meta") && (it.name !== "scheme")
+    	]
+      for (a:attr){
+      	returnStr += "[str]"
+      	if (a.enclosingType === c.name){return returnStr}
+      }
+    }
+    
 
     private def generateClassDefinition(Data rosettaClass) {
         return '''
@@ -141,6 +166,7 @@ class PythonModelObjectGenerator {
                     """
                 «ENDIF»
                 «generateAttributes(rosettaClass)»
+                «hasKeys(rosettaClass)»
                 «expressionGenerator.generateConditions(rosettaClass)»
         '''
     }

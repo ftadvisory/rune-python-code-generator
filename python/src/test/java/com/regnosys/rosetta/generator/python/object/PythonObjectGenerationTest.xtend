@@ -1670,6 +1670,18 @@ class PythonObjectGenerationTest {
 		assertTrue(python.toString.contains(expectedB))
 	}
 	
+	@Test
+	def void meta_Test() {
+		val python = '''
+		type TestType: <"Test type description.">
+		[metadata key]
+			testTypeValue1 string (1..1) <"Test string">
+			[metadata id]
+		'''.generatePython
+		
+		val expected= ''''''
+		}
+	
 	
 	def generatePython(CharSequence model) {
 		val m = model.parseRosettaWithNoErrors

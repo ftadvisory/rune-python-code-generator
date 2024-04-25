@@ -24,7 +24,7 @@ cd $MYPATH
 ACDIR=$($PYEXE -c "import sys;print('Scripts' if sys.platform.startswith('win') else 'bin')")
 
 $PYEXE -m venv --clear .pydevenv || processError
-source .pyenv/$ACDIR/activate || processError
+source .pydevenv/$ACDIR/activate || processError
 $PYEXE -m pip install --upgrade pip || processError
 $PYEXE -m pip install "setuptools>=62.0" || processError
 $PYEXE -m pip install pylint || processError
