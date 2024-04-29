@@ -143,10 +143,14 @@ class  PythonFunctionGenerator {
         val inputs = function.inputs
         val output = function.output
         val description = function.getDefinition()
-        
+        output.getTypeCall().getType()
         return
         '''
         """
+        « IF output.getTypeCall().getType().getName() == "number"»
+        [Calculation function]
+        «ENDIF»
+        
         «description»
         
         Parameters 

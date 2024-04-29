@@ -40,6 +40,8 @@ class PythonFunctionsTest {
 		@replaceable
 		def Abs(arg: Decimal) -> Decimal:
 		    """
+		    [Calculation function]
+		    
 		    Returns the absolute value of a number. If the argument is not negative, the argument is returned. If the argument is negative, the negation of the argument is returned.
 		    
 		    Parameters 
@@ -91,6 +93,8 @@ class PythonFunctionsTest {
 		@replaceable
 		def AppendToVector(vector: list[Decimal] | None, value: Decimal) -> Decimal:
 		    """
+		    [Calculation function]
+		    
 		    Append a single value to a vector (list of numbers).
 		    
 		    Parameters 
@@ -114,8 +118,6 @@ class PythonFunctionsTest {
 		    
 		    
 		    return resultVector
-		
-		sys.modules[__name__].__class__ = create_module_attr_guardian(sys.modules[__name__].__class__)
 		'''
 		assertTrue(python.toString.contains(expected))
 	  	
@@ -234,6 +236,7 @@ class PythonFunctionsTest {
 		@replaceable
 		def Create_UnitType(currency: str | None, financialUnit: FinancialUnitEnum | None) -> UnitType:
 		    """
+		    
 		    Create UnitType with given currency or financial unit.
 		    
 		    Parameters 
@@ -263,8 +266,6 @@ class PythonFunctionsTest {
 		    
 		    
 		    return unitType
-		
-		sys.modules[__name__].__class__ = create_module_attr_guardian(sys.modules[__name__].__class__)
 		'''
 		assertTrue(python.toString.contains(expected))
     }
@@ -305,6 +306,7 @@ class PythonFunctionsTest {
 		@replaceable
 		def ResolvePerformanceReset(observation: Observation, date: datetime.date) -> Reset:
 		    """
+		    
 		    Defines how to resolve the reset value for a performance payout.
 		    
 		    Parameters 
@@ -329,8 +331,6 @@ class PythonFunctionsTest {
 		    
 		    
 		    return reset
-		
-		sys.modules[__name__].__class__ = create_module_attr_guardian(sys.modules[__name__].__class__)
 		'''
 		assertTrue(python.toString.contains(expected))
 		
@@ -362,6 +362,7 @@ class PythonFunctionsTest {
 		@replaceable
 		def FilterQuantity(quantities: list[Quantity] | None, unit: UnitType) -> Quantity:
 		    """
+		    
 		    Filter list of quantities based on unit type.
 		    
 		    Parameters 
@@ -384,8 +385,6 @@ class PythonFunctionsTest {
 		    
 		    
 		    return filteredQuantities
-		
-		sys.modules[__name__].__class__ = create_module_attr_guardian(sys.modules[__name__].__class__)
 		'''
 		assertTrue(python.toString.contains(expected))
 		
@@ -433,6 +432,8 @@ class PythonFunctionsTest {
 		@replaceable
 		def ArithmeticOperation(n1: Decimal, op: ArithmeticOperationEnum, n2: Decimal) -> Decimal:
 		    """
+		    [Calculation function]
+		    
 		    
 		    Parameters 
 		    ----------
@@ -490,8 +491,6 @@ class PythonFunctionsTest {
 		    
 		    
 		    return result
-		
-		sys.modules[__name__].__class__ = create_module_attr_guardian(sys.modules[__name__].__class__)
 		'''
     	assertTrue(python.toString.contains(expected))
     }
@@ -522,6 +521,7 @@ class PythonFunctionsTest {
     	@replaceable
     	def FilterQuantityByCurrencyExists(quantities: list[QuantitySchedule] | None) -> QuantitySchedule:
     	    """
+    	    
     	    Filter list of quantities based on unit type.
     	    
     	    Parameters 
@@ -541,9 +541,7 @@ class PythonFunctionsTest {
     	    
     	    
     	    return filteredQuantities
-    	
-    	sys.modules[__name__].__class__ = create_module_attr_guardian(sys.modules[__name__].__class__)
-    	'''
+    	    '''
     	assertTrue(python.toString.contains(expected))
     	
     }
@@ -572,6 +570,8 @@ class PythonFunctionsTest {
 		@replaceable
 		def testAlias(inp1: Decimal, inp2: Decimal) -> Decimal:
 		    """
+		    [Calculation function]
+		    
 		    
 		    Parameters 
 		    ----------
@@ -598,8 +598,6 @@ class PythonFunctionsTest {
 		    
 		    
 		    return result
-		
-		sys.modules[__name__].__class__ = create_module_attr_guardian(sys.modules[__name__].__class__)
 		'''
 		assertTrue(python.toString.contains(expected))
     	
@@ -640,6 +638,7 @@ class PythonFunctionsTest {
     	def testAlias(a: A, b: B) -> C:
     	    """
     	    
+    	    
     	    Parameters 
     	    ----------
     	    a : A
@@ -660,8 +659,6 @@ class PythonFunctionsTest {
     	    
     	    
     	    return c
-    	
-    	sys.modules[__name__].__class__ = create_module_attr_guardian(sys.modules[__name__].__class__)
     	'''
     	
     	assertTrue(python.toString.contains(expected))
@@ -716,6 +713,7 @@ class PythonFunctionsTest {
 		@replaceable
 		def ResolveInterestRateObservationIdentifiers(payout: InterestRatePayout, date: datetime.date) -> ObservationIdentifier:
 		    """
+		    
 		    Defines which attributes on the InterestRatePayout should be used to locate and resolve the underlier's price, for example for the reset process.
 		    
 		    Parameters 
@@ -737,9 +735,7 @@ class PythonFunctionsTest {
 		    
 		    
 		    return identifiers
-		
-		sys.modules[__name__].__class__ = create_module_attr_guardian(sys.modules[__name__].__class__)
-		'''
+		    '''
 		assertTrue(python.toString.contains(expected))
     	
     }
@@ -767,6 +763,8 @@ class PythonFunctionsTest {
     	@replaceable
     	def RoundToNearest(value: Decimal, nearest: Decimal, roundingMode: RoundingModeEnum) -> Decimal:
     	    """
+    	    [Calculation function]
+    	    
     	    
     	    Parameters 
     	    ----------
@@ -796,8 +794,6 @@ class PythonFunctionsTest {
     	    
     	    
     	    return roundedValue
-    	
-    	sys.modules[__name__].__class__ = create_module_attr_guardian(sys.modules[__name__].__class__)
     	'''
     	assertTrue(python.toString.contains(expected))
     }
@@ -827,6 +823,8 @@ class PythonFunctionsTest {
     	@replaceable
     	def RoundToNearest(value: Decimal, nearest: Decimal, roundingMode: RoundingModeEnum) -> Decimal:
     	    """
+    	    [Calculation function]
+    	    
     	    
     	    Parameters 
     	    ----------
@@ -860,8 +858,6 @@ class PythonFunctionsTest {
     	    
     	    
     	    return roundedValue
-    	
-    	sys.modules[__name__].__class__ = create_module_attr_guardian(sys.modules[__name__].__class__)
     	'''
     	assertTrue(python.toString.contains(expected))
     }
@@ -891,6 +887,7 @@ class PythonFunctionsTest {
     	@replaceable
     	def NewFloatingPayout(masterConfirmation: EquitySwapMasterConfirmation2018 | None) -> InterestRatePayout:
     	    """
+    	    
     	    Function specification to create the interest rate (floating) payout part of an Equity Swap according to the 2018 ISDA CDM Equity Confirmation template.
     	    
     	    Parameters 
@@ -926,8 +923,6 @@ class PythonFunctionsTest {
     	    execute_local_conditions(_post_registry, 'Post-condition')
     	    
     	    return interestRatePayout
-    	
-    	sys.modules[__name__].__class__ = create_module_attr_guardian(sys.modules[__name__].__class__)
     	'''
     	assertTrue(python.toString.contains(expected))
     	
@@ -973,6 +968,8 @@ class PythonFunctionsTest {
     	@replaceable
     	def DayCountFraction(interestRatePayout: InterestRatePayout, date: datetime.date) -> Decimal:
     	    """
+    	    [Calculation function]
+    	    
     	    
     	    Parameters 
     	    ----------

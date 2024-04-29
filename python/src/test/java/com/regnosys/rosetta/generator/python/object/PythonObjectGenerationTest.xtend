@@ -347,7 +347,7 @@ class PythonObjectGenerationTest {
 		    """
 		    Provides an enumerated value for financial units, generally used in the context of defining quantities for securities.
 		    """
-		    currency: Optional[AttributeWithMeta[str] | str] = Field(None, description="Defines the currency to be used as a unit for a price, quantity, or other purpose.")
+		    currency: Optional[AttributeWithScheme[str] | str] = Field(None, description="Defines the currency to be used as a unit for a price, quantity, or other purpose.")
 		    """
 		    Defines the currency to be used as a unit for a price, quantity, or other purpose.
 		    """
@@ -381,237 +381,41 @@ class PythonObjectGenerationTest {
 		'''
 		val expectedTestType4=
 		'''
-		class CapacityUnitEnum(Enum):
+		class FinancialUnitEnum(Enum):
 		    """
-		    Provides enumerated values for capacity units, generally used in the context of defining quantities for commodities.
+		    Provides enumerated values for financial units, generally used in the context of defining quantities for securities.
 		    """
-		    ALW = "ALW"
+		    CONTRACT = "Contract"
 		    """
-		    Denotes Allowances as standard unit.
+		    Denotes financial contracts, such as listed futures and options.
 		    """
-		    BBL = "BBL"
+		    CONTRACTUAL_PRODUCT = "ContractualProduct"
 		    """
-		    Denotes a Barrel as a standard unit.
+		    Denotes a Contractual Product as defined in the CDM.  This unit type would be used when the price applies to the whole product, for example, in the case of a premium expressed as a cash amount.
 		    """
-		    BCF = "BCF"
+		    INDEX_UNIT = "IndexUnit"
 		    """
-		    Denotes Billion Cubic Feet as a standard unit.
+		    Denotes a price expressed in index points, e.g. for a stock index.
 		    """
-		    BDFT = "BDFT"
+		    LOG_NORMAL_VOLATILITY = "LogNormalVolatility"
 		    """
-		    Denotes Board Feet as a standard unit.
+		    Denotes a log normal volatility, expressed in %/month, where the percentage is represented as a decimal. For example, 0.15 means a log-normal volatility of 15% per month.
 		    """
-		    BSH = "BSH"
+		    SHARE = "Share"
 		    """
-		    Denotes a Bushel as a standard unit of weight (48 lb or 21.7725 kg).
+		    Denotes the number of units of financial stock shares.
 		    """
-		    BTU = "BTU"
+		    VALUE_PER_DAY = "ValuePerDay"
 		    """
-		    Denotes British Thermal Units as a standard unit.
+		    Denotes a value (expressed in currency units) for a one day change in a valuation date, which is typically used for expressing sensitivity to the passage of time, also known as theta risk, or carry, or other names.
 		    """
-		    CBM = "CBM"
+		    VALUE_PER_PERCENT = "ValuePerPercent"
 		    """
-		    Denotes Cubic Meters as a standard unit.
+		    Denotes a value (expressed in currency units) per percent change in the underlying rate which is typically used for expressing sensitivity to volatility changes, also known as vega risk.
 		    """
-		    CER = "CER"
+		    WEIGHT = "Weight"
 		    """
-		    Denotes Certified Emissions Reduction as a standard unit.
-		    """
-		    CRT = "CRT"
-		    """
-		    Denotes Climate Reserve Tonnes as a standard unit.
-		    """
-		    DAG = "DAG"
-		    """
-		    Denotes 10 grams as a standard unit used in precious metals contracts (e.g MCX).
-		    """
-		    DAY = "DAY"
-		    """
-		    Denotes a single day as a standard unit used in time charter trades.
-		    """
-		    DMTU = "DMTU"
-		    """
-		    Denotes Dry Metric Ton (Tonne) Units - Consists of a metric ton of mass excluding moisture.
-		    """
-		    DTH = "DTH"
-		    """
-		    Denotes a Dekatherm as a standard unit.
-		    """
-		    ENVCRD = "ENVCRD"
-		    """
-		    Denotes Environmental Credit as a standard unit.
-		    """
-		    ENVOFST = "ENVOFST"
-		    """
-		    Denotes Environmental Offset as a standard unit.
-		    """
-		    FEU = "FEU"
-		    """
-		    Denotes a 40 ft. Equivalent Unit container as a standard unit.
-		    """
-		    G = "G"
-		    """
-		    Denotes a Gram as a standard unit.
-		    """
-		    GBCWT = "GBCWT"
-		    """
-		    Denotes a GB Hundredweight unit as standard unit.
-		    """
-		    GBGAL = "GBGAL"
-		    """
-		    Denotes a GB Gallon unit as standard unit.
-		    """
-		    GBT = "GBT"
-		    """
-		    Denotes a GB Ton as a standard unit.
-		    """
-		    GJ = "GJ"
-		    """
-		    Denotes a Gigajoule as a standard unit.
-		    """
-		    GW = "GW"
-		    """
-		    Denotes a Gigawatt as a standard unit.
-		    """
-		    GWH = "GWH"
-		    """
-		    Denotes a Gigawatt-hour as a standard unit.
-		    """
-		    HL = "HL"
-		    """
-		    Denotes a Hectolitre as a standard unit.
-		    """
-		    INGOT = "INGOT"
-		    """
-		    Denotes an Ingot as a standard unit.
-		    """
-		    KG = "KG"
-		    """
-		    Denotes a Kilogram as a standard unit.
-		    """
-		    KL = "KL"
-		    """
-		    Denotes a Kilolitre as a standard unit.
-		    """
-		    KW = "KW"
-		    """
-		    Denotes a Kilowatt as a standard unit.
-		    """
-		    KWDC = "KWDC"
-		    """
-		    Denotes a Kilowatt Day Capacity as a standard unit.
-		    """
-		    KWH = "KWH"
-		    """
-		    Denotes a Kilowatt-hour as a standard unit.
-		    """
-		    KWHC = "KWHC"
-		    """
-		    Denotes a Kilowatt Hours Capacity as a standard unit.
-		    """
-		    KWMC = "KWMC"
-		    """
-		    Denotes a Kilowatt Month Capacity as a standard unit.
-		    """
-		    KWMINC = "KWMINC"
-		    """
-		    Denotes a Kilowatt Minute Capacity as a standard unit.
-		    """
-		    KWYC = "KWYC"
-		    """
-		    Denotes a Kilowatt Year Capacity as a standard unit.
-		    """
-		    L = "L"
-		    """
-		    Denotes a Litre as a standard unit.
-		    """
-		    LB = "LB"
-		    """
-		    Denotes a Pound as a standard unit.
-		    """
-		    MB = "MB"
-		    """
-		    Denotes a Thousand Barrels as a standard unit.
-		    """
-		    MBF = "MBF"
-		    """
-		    Denotes a Thousand board feet, which are used in contracts on forestry underlyers as a standard unit.
-		    """
-		    MJ = "MJ"
-		    """
-		    Denotes a Megajoule as a standard unit.
-		    """
-		    MMBBL = "MMBBL"
-		    """
-		    Denotes a Million Barrels as a standard unit.
-		    """
-		    MMBF = "MMBF"
-		    """
-		    Denotes a Million board feet, which are used in contracts on forestry underlyers as a standard unit.
-		    """
-		    MMBTU = "MMBTU"
-		    """
-		    Denotes a Million British Thermal Units as a standard unit.
-		    """
-		    MSF = "MSF"
-		    """
-		    Denotes a Thousand square feet as a standard unit.
-		    """
-		    MT = "MT"
-		    """
-		    Denotes a Metric Ton as a standard unit.
-		    """
-		    MW = "MW"
-		    """
-		    Denotes a Megawatt as a standard unit.
-		    """
-		    MWDC = "MWDC"
-		    """
-		    Denotes a Megawatt Day Capacity as a standard unit.
-		    """
-		    MWH = "MWH"
-		    """
-		    Denotes a Megawatt-hour as a standard unit.
-		    """
-		    MWHC = "MWHC"
-		    """
-		    Denotes a Megawatt Hours Capacity as a standard unit.
-		    """
-		    MWMC = "MWMC"
-		    """
-		    Denotes a Megawatt Month Capacity as a standard unit.
-		    """
-		    MWMINC = "MWMINC"
-		    """
-		    Denotes a Megawatt Minute Capacity as a standard unit.
-		    """
-		    MWYC = "MWYC"
-		    """
-		    Denotes a Megawatt Year Capacity as a standard unit.
-		    """
-		    OZT = "OZT"
-		    """
-		    Denotes a Troy Ounce as a standard unit.
-		    """
-		    TEU = "TEU"
-		    """
-		    Denotes a 20 ft. Equivalent Unit container as a standard unit.
-		    """
-		    THERM = "THERM"
-		    """
-		    Denotes a Thermal Unit as a standard unit.
-		    """
-		    USCWT = "USCWT"
-		    """
-		    Denotes US Hundredweight unit as a standard unit.
-		    """
-		    USGAL = "USGAL"
-		    """
-		    Denotes a US Gallon unit as a standard unit.
-		    """
-		    UST = "UST"
-		    """
-		    Denotes a US Ton as a standard unit.
+		    Denotes a quantity (expressed as a decimal value) represented the weight of a component in a basket.
 		    """
 		'''
 		assertTrue(python.toString.contains(expectedTestType))
@@ -673,14 +477,15 @@ class PythonObjectGenerationTest {
 		    """
 		    A class to specify a legal entity, with a required name and an optional entity identifier (such as the LEI).
 		    """
-		    entityId: List[AttributeWithMeta[str] | str] = Field([], description="A legal entity identifier (e.g. RED entity code).")
+		    entityId: List[AttributeWithScheme[str] | str] = Field([], description="A legal entity identifier (e.g. RED entity code).")
 		    """
 		    A legal entity identifier (e.g. RED entity code).
 		    """
-		    name: AttributeWithMeta[str] | str = Field(..., description="The legal entity name.")
+		    name: AttributeWithScheme[str] | str = Field(..., description="The legal entity name.")
 		    """
 		    The legal entity name.
 		    """
+		    ClassWithKey[str]
 		'''
 		val expectedTestType2 =
 		'''
@@ -1133,7 +938,7 @@ class PythonObjectGenerationTest {
 		    """
 		    Provides an enumerated value for financial units, generally used in the context of defining quantities for securities.
 		    """
-		    currency: Optional[AttributeWithMeta[str] | str] = Field(None, description="Defines the currency to be used as a unit for a price, quantity, or other purpose.")
+		    currency: Optional[AttributeWithScheme[str] | str] = Field(None, description="Defines the currency to be used as a unit for a price, quantity, or other purpose.")
 		    """
 		    Defines the currency to be used as a unit for a price, quantity, or other purpose.
 		    """
