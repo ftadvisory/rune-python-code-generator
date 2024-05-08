@@ -145,29 +145,35 @@ class PythonModelObjectGenerator {
         return imports.toSet.toList
     }
     
-     private def hasKeys(Data c){
+     private def boolean hasKeys(Data c){
+     	
      	var returnStr="ClassWithKey";
 	 val attr = c.allExpandedAttributes.filter[enclosingType == c.name].filter [
         (it.name !== "reference") && (it.name === "meta") && (it.name !== "scheme")
     	]
       for (a:attr){
-      	returnStr += "[str]"
-      	if (a.enclosingType === c.name){return returnStr}
+      	//returnStr += "[str]"
+      	if (a.enclosingType === c.name){return true}
       }
+      return false
     }
     
 
     private def generateClassDefinition(Data rosettaClass) {
         return '''
-            class «rosettaClass.name»«IF rosettaClass.superType === null»«ENDIF»«IF rosettaClass.superType !== null»(«rosettaClass.superType.name»):«ELSE»(BaseDataClass):«ENDIF»
-                «IF rosettaClass.definition !== null»
-                    """
-                    «rosettaClass.definition»
-                    """
-                «ENDIF»
-                «generateAttributes(rosettaClass)»
-                «hasKeys(rosettaClass)»
-                «expressionGenerator.generateConditions(rosettaClass)»
+			class «rosettaClass.name»«IF rosettaClass.superType === null»«ENDIF»«IF rosettaClass.superType !== null»(«rosettaClass.superType.name»):«ELSE»(BaseDataClass):«ENDIF»
+				«IF rosettaClass.definition !== null»
+				"""
+				«rosettaClass.definition»
+				"""
+            «ENDIF»
+				«generateAttributes(rosettaClass)»
+				«expressionGenerator.generateConditions(rosettaClass)»
+				«IF hasKeys(rosettaClass)»
+				@metadata_key
+				def validate_mkeys(__module__):
+					return solve_metadata_key(__module__)
+	        	«ENDIF»
         '''
     }
     

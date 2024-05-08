@@ -12,6 +12,7 @@ __all__ = ['if_cond', 'if_cond_fn', 'Multiprop', 'rosetta_condition',
            'get_only_element', 'rosetta_filter',
            'all_elements', 'contains', 'disjoint', 'join',
            'rosetta_local_condition',
+           'metadata_key',
            'execute_local_conditions',
            'flatten_list',
            '_resolve_rosetta_attr',
@@ -31,7 +32,7 @@ __all__ = ['if_cond', 'if_cond_fn', 'Multiprop', 'rosetta_condition',
            'AttributeWithMetaWithAddressWithReference',
            'AttributeWithScheme',
            'AttributeWithMetaWithScheme',
-           'ClassWithKey']
+           'ClassWithKey', 'solve_metadata_key']
 
 
 def if_cond(ifexpr, thenexpr: str, elseexpr: str, obj: object):
@@ -121,7 +122,19 @@ class Multiprop(list):
 
 
 _CONDITIONS_REGISTRY: defaultdict[str, dict[str, Any]] = defaultdict(dict)
+_METAKEYS_REGISTRY: defaultdict[str] = defaultdict(dict)
 
+
+def metadata_key(rclass):
+    path_components = rclass.__qualname__.split('.')
+    rname= path_components[0]
+    _METAKEYS_REGISTRY[rname]= rname
+
+    @wraps(rclass)
+    def wrapper(*args, **kwargs):
+        return rclass(*args, **kwargs)
+
+    return wrapper
 
 def rosetta_condition(condition):
     '''Wrapper to register all constraint functions in the global registry'''
@@ -179,6 +192,11 @@ def _get_conditions(cls) -> list:
                 for k, v in _CONDITIONS_REGISTRY.get(fqcn, {}).items()]
     return res
 
+def _get_meta_registry()->dict:
+	return _METAKEYS_REGISTRY
+
+def _update_meta_registry(newKey, value):
+	_METAKEYS_REGISTRY[newKey]= value
 
 class MetaAddress(BaseModel):  # pylint: disable=missing-class-docstring
     scope: str
@@ -215,7 +233,7 @@ class BaseDataClass(BaseModel):
         '''
         att_errors = self.validate_attribs(raise_exc=raise_exc, strict=strict)
         return att_errors + self.validate_conditions(recursively=recursively,
-                                                     raise_exc=raise_exc)
+                                                     raise_exc=raise_exc)+self.validate_meta()
 
     def validate_attribs(self, raise_exc: bool = True, strict: bool = True) -> list:
         ''' This method performs attribute type validation.
@@ -230,6 +248,18 @@ class BaseDataClass(BaseModel):
                 raise validation_error
             return [validation_error]
         return []
+    def validate_meta(self):
+        mregistry= _get_meta_registry()
+        for attr_name in self.__fields__.keys():
+            attr_value = getattr(self, attr_name)
+            if self.__class__.__name__ in mregistry:
+                solve_metadata_key(self)
+            if isinstance(attr_value, BaseDataClass):
+                attr_value.validate_meta()
+            elif isinstance(attr_value, list):
+                for item in attr_value:
+                    if isinstance(item, BaseDataClass):
+                        item.validate_meta()
 
     def validate_conditions(self,
                             recursively: bool = True,
@@ -312,6 +342,19 @@ class BaseDataClass(BaseModel):
 
         attr.append(value)
 
+    def _find_meta_keys(self):
+        attr_name= self.__fields__.keys()[0]
+        attr_value = getattr(self, attr_name)
+        if isinstance(attr_value, BaseDataClass):
+            attr_value._find_meta_keys(self)
+        elif isinstance(attr_value, list):
+            for item in attr_value:
+                if isinstance(item, BaseDataClass):
+                    item._find_meta_keys(self)
+        elif isinstance(attr_value, dict) and 'globalKey' in attr_value:
+            return attr_value['globalKey']
+
+
     def resolve_references(self):
         """
         Initiates the recursive resolution of references using the model's own data.
@@ -320,9 +363,10 @@ class BaseDataClass(BaseModel):
         # Create a dictionary to store all global key mappings
         global_key_dict = {}
         global_location_dict ={}
-        self._build_global_dicts(None, global_key_dict, global_location_dict)
+        self.validate_meta()
+        #self._build_global_dicts(None, global_key_dict, global_location_dict)
         # Resolve references using the global key dictionary
-        self._resolve_references_recursive(None, None, global_key_dict, global_location_dict)
+        self._resolve_references_recursive(None, None, global_location_dict)
 
     def _build_global_dicts(self, parent_element, global_key_dict,global_location_dict):
         """
@@ -347,7 +391,7 @@ class BaseDataClass(BaseModel):
                 aux=attr_value.meta['location']
                 global_location_dict[aux[0]['value']] = attr_value
 
-    def _resolve_references_recursive(self, parent, attr_name, global_key_dict,global_location_dict):
+    def _resolve_references_recursive(self, parent, attr_name,global_location_dict):
         """
         Recursively traverses the model's data structure to resolve references using the global key dictionary.
         """
@@ -360,14 +404,15 @@ class BaseDataClass(BaseModel):
                     setattr(self, attr, resolved_location)
             elif isinstance(attr_value, BaseModel):
                 if hasattr(attr_value, '_resolve_references_recursive'):
-                    attr_value._resolve_references_recursive(self, attr, global_key_dict,global_location_dict)
+                    attr_value._resolve_references_recursive(self, attr,global_location_dict)
             elif isinstance(attr_value, list):
                 for item in attr_value:
                     if isinstance(item, BaseModel):
                         if hasattr(item, '_resolve_references_recursive'):
-                            item._resolve_references_recursive(self, attr, global_key_dict,global_location_dict)
+                            item._resolve_references_recursive(self, attr,global_location_dict)
             elif attr == 'globalReference':
                 global_reference = getattr(self, attr)
+                global_key_dict= _get_meta_registry()
                 if global_reference in global_key_dict:
                     resolved_reference = global_key_dict[global_reference]
                     setattr(parent, attr_name, resolved_reference)
@@ -504,6 +549,12 @@ _cmp = {
     '<': lambda x, y: _ntoz(x) < _ntoz(y)
 }
 
+
+def solve_metadata_key(self):
+    registry = _get_meta_registry()
+    if self.__class__.__name__ in registry:
+        if 'globalKey' in self.meta:
+            _update_meta_registry(self.meta['globalKey'], self)
 
 def all_elements(lhs, op, rhs) -> bool:
     '''Checks that two lists have the same elements'''

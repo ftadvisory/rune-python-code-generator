@@ -24,6 +24,7 @@ def test_trade_state_reference_pos (cdm_sample_in=None):
     json_str = Path(cdm_sample_in).read_text()
     tradestate = TradeState.model_validate_json(json_str)
     assert isinstance(tradestate.trade.tradableProduct.product.contractualProduct.economicTerms.payout.interestRatePayout[1].resetDates.fixingDates.dateRelativeTo, AttributeWithReference), "calculationPeriodDatesReference is not an instance of calculationPeriodDates"
+    #tradestate.validate_meta()
     tradestate.resolve_references()
     assert 'globalKey' in tradestate.trade.tradableProduct.product.contractualProduct.economicTerms.payout.interestRatePayout[1].resetDates.fixingDates.dateRelativeTo.meta, "reference is not resolved"
 def test_trade_state_reference_neg (cdm_sample_in = None):
@@ -46,19 +47,6 @@ def test_trade_state_meta (cdm_sample_in=None):
     json_str = Path(cdm_sample_in).read_text()
     tradestate = TradeState.model_validate_json(json_str)
     assert isinstance(tradestate.trade.tradeDate, AttributeWithMeta), "tradeDate has no meta"
-
-def test_trade_key (cdm_sample_in=None): #classWithKey!?
-    '''test Key'''
-    dir_path = os.path.dirname(__file__)
-    if cdm_sample_in is None:
-        sys.path.append(os.path.join(dir_path))
-        cdm_sample_in = os.path.join(dir_path, CDM_JSON_SAMPLE_SOURCE, 'rates', 'EUR-Vanilla-account.json')
-    json_str = Path(cdm_sample_in).read_text()
-    tradestate = TradeState.model_validate_json(json_str)
-    print(tradestate.checkKey())
-    tradestate.resolve_references()
-   # assert isinstance(tradestate.trade, ClassWithKey), "trade has no keys associated"
-
 
 def test_trade_state_scheme (cdm_sample_in=None):
     '''test AttributeWithScheme'''
