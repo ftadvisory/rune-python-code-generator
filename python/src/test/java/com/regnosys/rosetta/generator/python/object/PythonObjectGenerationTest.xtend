@@ -1482,6 +1482,8 @@ class PythonObjectGenerationTest {
 		[metadata key]
 			testTypeValue1 string (1..1) <"Test string">
 			[metadata id]
+			testTypeValue2 string (1..*) <"Test string 2">
+			[metadata location]
 		'''.generatePython
 		
 		val expected= ''''''

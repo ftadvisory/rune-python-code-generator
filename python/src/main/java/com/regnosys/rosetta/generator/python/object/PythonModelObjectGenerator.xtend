@@ -188,6 +188,7 @@ class PythonModelObjectGenerator {
 
     private def generateExpandedAttribute(Data c, ExpandedAttribute attribute) {
         var att = ""
+        var location= false
         if (attribute.sup > 1 || attribute.unbound) {
             att += "List[" + toPythonType(c, attribute) + "]"
         } else {
@@ -197,7 +198,9 @@ class PythonModelObjectGenerator {
                 att += toPythonType(c, attribute) // cardinality (1..1)
             }
         }
-
+		if (att.contains("WithLocation")) {
+			location= true
+		}
         var field_default = 'None'
         if (attribute.inf == 1 && attribute.sup == 1)
             field_default = '...' // mandatory field -> cardinality (1..1)
@@ -210,11 +213,17 @@ class PythonModelObjectGenerator {
                                 (attribute.inf == 1 && attribute.sup == 1) ||
                                 (attribute.inf == 0 && attribute.unbound))
 
-
+		
         var sup_str         = (attribute.unbound) ? 'None' : attribute.sup.toString()
          val attrDesc        = (attribute.definition === null) ? '' : attribute.definition.replaceAll('\\s+', ' ')
         '''
+            «IF location === true»
+			@metadata_location
+			def «attrName»_solve(__module__):
+				return solve_metalocation(__module__)
+			«ENDIF»
             «attrName»: «att» = Field(«field_default», description="«attrDesc»")
+            
             «IF attribute.definition !== null»
                 """
                 «attribute.definition»
