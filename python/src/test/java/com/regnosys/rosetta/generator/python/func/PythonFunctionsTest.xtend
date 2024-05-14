@@ -993,6 +993,26 @@ class PythonFunctionsTest {
     	assertTrue(python.toString.contains(expected))
     }
     
+    @Test
+    def void qualifTest(){
+    	val python = 
+    	'''
+    	type BusinessEvent:
+    		testTypeValue1 string (1..1) <"Test string">
+    		[metadata scheme]
+    	func Qualify_OnDemandPayment: <"Qualification of a on-demand payment.">
+	    [qualification BusinessEvent]
+	    inputs:
+	        businessEvent BusinessEvent (1..1)
+	    output:
+	        is_event boolean (1..1)
+	    	
+	    }
+	    '''.generatePython
+	    val expected = 
+    	'''
+    	'''
+	    }
 
 	def generatePython(CharSequence model) {
 		val m = model.parseRosetta

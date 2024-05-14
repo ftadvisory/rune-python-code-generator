@@ -57,7 +57,14 @@ class  PythonFunctionGenerator {
         «generateImports(dependencies, function)»
         
         
+        
         @replaceable
+        « IF function.output.getTypeCall().getType().getName() == "number"»
+        @calculation_func
+        «ENDIF»
+        « IF function.name.contains("Qualify") && function.output.getTypeCall().getType().getName() == "boolean"»
+        @qualification_func
+        «ENDIF»
         def «function.name»«generatesInputs(function)»:
             «generateDescription(function)»
             «IF function.conditions.size()>0»    
@@ -147,10 +154,6 @@ class  PythonFunctionGenerator {
         return
         '''
         """
-        « IF output.getTypeCall().getType().getName() == "number"»
-        [Calculation function]
-        «ENDIF»
-        
         «description»
         
         Parameters 

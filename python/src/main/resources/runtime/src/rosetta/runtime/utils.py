@@ -33,7 +33,9 @@ __all__ = ['if_cond', 'if_cond_fn', 'Multiprop', 'rosetta_condition',
            'AttributeWithMetaWithAddressWithReference',
            'AttributeWithScheme',
            'AttributeWithMetaWithScheme',
-           'solve_metadata_key', 'solve_metalocation']
+           'solve_metadata_key', 'solve_metalocation',
+           'calculation_func','qualification_func',
+           'scheme']
 
 
 def if_cond(ifexpr, thenexpr: str, elseexpr: str, obj: object):
@@ -148,6 +150,27 @@ def metadata_key(rclass):
     rname= path_components[0]
     _METAKEYS_REGISTRY[rname]= rname
 
+    @wraps(rclass)
+    def wrapper(*args, **kwargs):
+        return rclass(*args, **kwargs)
+
+    return wrapper
+
+def scheme(rclass):
+    @wraps(rclass)
+    def wrapper(*args, **kwargs):
+        return rclass(*args, **kwargs)
+
+    return wrapper
+
+def qualification_func(rclass):
+    @wraps(rclass)
+    def wrapper(*args, **kwargs):
+        return rclass(*args, **kwargs)
+
+    return wrapper
+
+def calculation_func(rclass):
     @wraps(rclass)
     def wrapper(*args, **kwargs):
         return rclass(*args, **kwargs)

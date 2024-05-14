@@ -1481,7 +1481,7 @@ class PythonObjectGenerationTest {
 		type TestType: <"Test type description.">
 		[metadata key]
 			testTypeValue1 string (1..1) <"Test string">
-			[metadata id]
+			[metadata scheme]
 			testTypeValue2 string (1..*) <"Test string 2">
 			[metadata location]
 		'''.generatePython

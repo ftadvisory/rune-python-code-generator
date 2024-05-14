@@ -90,7 +90,7 @@ class PythonModelObjectGenerator {
             val classes = type.generateClasses(namespace, version).replaceTabsWithSpaces
             result.put(PythonModelGeneratorUtil::toPyFileName(model.name, type.name), PythonModelGeneratorUtil::createImports(type.name) + classes)
         }
-
+		
         result;
     }
 
@@ -146,19 +146,15 @@ class PythonModelObjectGenerator {
     }
     
      private def boolean hasKeys(Data c){
-     	
-     	var returnStr="ClassWithKey";
 	 val attr = c.allExpandedAttributes.filter[enclosingType == c.name].filter [
         (it.name !== "reference") && (it.name === "meta") && (it.name !== "scheme")
     	]
       for (a:attr){
-      	//returnStr += "[str]"
       	if (a.enclosingType === c.name){return true}
       }
       return false
     }
     
-
     private def generateClassDefinition(Data rosettaClass) {
         return '''
 			class «rosettaClass.name»«IF rosettaClass.superType === null»«ENDIF»«IF rosettaClass.superType !== null»(«rosettaClass.superType.name»):«ELSE»(BaseDataClass):«ENDIF»
@@ -189,6 +185,7 @@ class PythonModelObjectGenerator {
     private def generateExpandedAttribute(Data c, ExpandedAttribute attribute) {
         var att = ""
         var location= false
+        //var scheme=false
         if (attribute.sup > 1 || attribute.unbound) {
             att += "List[" + toPythonType(c, attribute) + "]"
         } else {
@@ -201,6 +198,9 @@ class PythonModelObjectGenerator {
 		if (att.contains("WithLocation")) {
 			location= true
 		}
+		//if (att.contains("WithScheme")) {
+			//scheme= true
+		//}
         var field_default = 'None'
         if (attribute.inf == 1 && attribute.sup == 1)
             field_default = '...' // mandatory field -> cardinality (1..1)
@@ -222,18 +222,19 @@ class PythonModelObjectGenerator {
 			def «attrName»_solve(__module__):
 				return solve_metalocation(__module__)
 			«ENDIF»
-            «attrName»: «att» = Field(«field_default», description="«attrDesc»")
-            
+			
+			«attrName»: «att» = Field(«field_default», description="«attrDesc»")
+			
             «IF attribute.definition !== null»
-                """
-                «attribute.definition»
-                """
+			"""
+			«attribute.definition»
+			"""
             «ENDIF»
             «IF need_card_check»
-                @rosetta_condition
-                def cardinality_«attrName»(self):
-                    return check_cardinality(self.«attrName», «attribute.inf», «sup_str»)
-                
+			@rosetta_condition
+			def cardinality_«attrName»(self):
+				return check_cardinality(self.«attrName», «attribute.inf», «sup_str»)
+			
             «ENDIF»
         '''
     }
