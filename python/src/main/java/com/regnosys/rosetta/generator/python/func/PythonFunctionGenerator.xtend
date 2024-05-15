@@ -59,7 +59,7 @@ class  PythonFunctionGenerator {
         
         
         @replaceable
-        « IF function.output.getTypeCall().getType().getName() == "number"»
+        « IF function.output!==null && function.output.getTypeCall().getType().getName() == "number"»
         @calculation_func
         «ENDIF»
         « IF function.name.contains("Qualify") && function.output.getTypeCall().getType().getName() == "boolean"»
@@ -150,7 +150,6 @@ class  PythonFunctionGenerator {
         val inputs = function.inputs
         val output = function.output
         val description = function.getDefinition()
-        output.getTypeCall().getType()
         return
         '''
         """

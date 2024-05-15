@@ -572,17 +572,19 @@ def solve_metadata_key(self):
 
 def solve_metalocation(self):
     '''Solves the metadata locations and updates the global dictionary'''
-    registry= _get_loc_registry()
+    registry = _get_loc_registry()
     if self.__class__.__name__ in registry:
-        att=registry[self.__class__.__name__]
+        att = registry[self.__class__.__name__]
         for a in att:
-            attributeToChek= getattr(self,a)
-            if (attributeToChek is not None and attributeToChek != []):
-                if (type(attributeToChek) is list) : attributeToChek= attributeToChek[0]
-                if 'location' in attributeToChek.meta:
-                    newKey= attributeToChek.meta['location']
-                    newKey= newKey[0]['value']
-                    _update_loc_registry(newKey, attributeToChek)
+            attributeToCheck = getattr(self, a)
+            if attributeToCheck is not None and attributeToCheck != []:
+                if type(attributeToCheck) is list:
+                    attributeToCheck = attributeToCheck[0]
+                if attributeToCheck is not None and hasattr(attributeToCheck, 'meta'):
+                    if attributeToCheck.meta is not None and 'location' in attributeToCheck.meta:
+                        newKey = attributeToCheck.meta['location']
+                        newKey = newKey[0]['value']
+                        _update_loc_registry(newKey, attributeToCheck)
 
 def all_elements(lhs, op, rhs) -> bool:
     '''Checks that two lists have the same elements'''
