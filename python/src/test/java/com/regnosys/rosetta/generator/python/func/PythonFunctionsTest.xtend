@@ -38,10 +38,9 @@ class PythonFunctionsTest {
 		val expected = 
 		'''
 		@replaceable
+		@calculation_func
 		def Abs(arg: Decimal) -> Decimal:
 		    """
-		    [Calculation function]
-		    
 		    Returns the absolute value of a number. If the argument is not negative, the argument is returned. If the argument is negative, the negation of the argument is returned.
 		    
 		    Parameters 
@@ -91,10 +90,9 @@ class PythonFunctionsTest {
 		val expected =
 		'''
 		@replaceable
+		@calculation_func
 		def AppendToVector(vector: list[Decimal] | None, value: Decimal) -> Decimal:
 		    """
-		    [Calculation function]
-		    
 		    Append a single value to a vector (list of numbers).
 		    
 		    Parameters 
@@ -236,7 +234,6 @@ class PythonFunctionsTest {
 		@replaceable
 		def Create_UnitType(currency: str | None, financialUnit: FinancialUnitEnum | None) -> UnitType:
 		    """
-		    
 		    Create UnitType with given currency or financial unit.
 		    
 		    Parameters 
@@ -306,7 +303,6 @@ class PythonFunctionsTest {
 		@replaceable
 		def ResolvePerformanceReset(observation: Observation, date: datetime.date) -> Reset:
 		    """
-		    
 		    Defines how to resolve the reset value for a performance payout.
 		    
 		    Parameters 
@@ -362,7 +358,6 @@ class PythonFunctionsTest {
 		@replaceable
 		def FilterQuantity(quantities: list[Quantity] | None, unit: UnitType) -> Quantity:
 		    """
-		    
 		    Filter list of quantities based on unit type.
 		    
 		    Parameters 
@@ -430,10 +425,9 @@ class PythonFunctionsTest {
 		val expected =
 		'''
 		@replaceable
+		@calculation_func
 		def ArithmeticOperation(n1: Decimal, op: ArithmeticOperationEnum, n2: Decimal) -> Decimal:
 		    """
-		    [Calculation function]
-		    
 		    
 		    Parameters 
 		    ----------
@@ -521,7 +515,6 @@ class PythonFunctionsTest {
     	@replaceable
     	def FilterQuantityByCurrencyExists(quantities: list[QuantitySchedule] | None) -> QuantitySchedule:
     	    """
-    	    
     	    Filter list of quantities based on unit type.
     	    
     	    Parameters 
@@ -568,10 +561,9 @@ class PythonFunctionsTest {
 		val expected =
 		'''
 		@replaceable
+		@calculation_func
 		def testAlias(inp1: Decimal, inp2: Decimal) -> Decimal:
 		    """
-		    [Calculation function]
-		    
 		    
 		    Parameters 
 		    ----------
@@ -637,7 +629,6 @@ class PythonFunctionsTest {
     	@replaceable
     	def testAlias(a: A, b: B) -> C:
     	    """
-    	    
     	    
     	    Parameters 
     	    ----------
@@ -713,7 +704,6 @@ class PythonFunctionsTest {
 		@replaceable
 		def ResolveInterestRateObservationIdentifiers(payout: InterestRatePayout, date: datetime.date) -> ObservationIdentifier:
 		    """
-		    
 		    Defines which attributes on the InterestRatePayout should be used to locate and resolve the underlier's price, for example for the reset process.
 		    
 		    Parameters 
@@ -735,7 +725,7 @@ class PythonFunctionsTest {
 		    
 		    
 		    return identifiers
-		    '''
+	    '''
 		assertTrue(python.toString.contains(expected))
     	
     }
@@ -761,10 +751,9 @@ class PythonFunctionsTest {
     	val expected = 
     	'''
     	@replaceable
+    	@calculation_func
     	def RoundToNearest(value: Decimal, nearest: Decimal, roundingMode: RoundingModeEnum) -> Decimal:
     	    """
-    	    [Calculation function]
-    	    
     	    
     	    Parameters 
     	    ----------
@@ -821,10 +810,9 @@ class PythonFunctionsTest {
     	val expected =
     	'''
     	@replaceable
+    	@calculation_func
     	def RoundToNearest(value: Decimal, nearest: Decimal, roundingMode: RoundingModeEnum) -> Decimal:
     	    """
-    	    [Calculation function]
-    	    
     	    
     	    Parameters 
     	    ----------
@@ -887,7 +875,6 @@ class PythonFunctionsTest {
     	@replaceable
     	def NewFloatingPayout(masterConfirmation: EquitySwapMasterConfirmation2018 | None) -> InterestRatePayout:
     	    """
-    	    
     	    Function specification to create the interest rate (floating) payout part of an Equity Swap according to the 2018 ISDA CDM Equity Confirmation template.
     	    
     	    Parameters 
@@ -966,10 +953,9 @@ class PythonFunctionsTest {
     	val expected = 
     	'''
     	@replaceable
+    	@calculation_func
     	def DayCountFraction(interestRatePayout: InterestRatePayout, date: datetime.date) -> Decimal:
     	    """
-    	    [Calculation function]
-    	    
     	    
     	    Parameters 
     	    ----------
@@ -994,7 +980,7 @@ class PythonFunctionsTest {
     }
     
     @Test
-    def void qualifTest(){
+    def void qualificationFuncTest(){
     	val python = 
     	'''
     	type BusinessEvent:
@@ -1006,12 +992,35 @@ class PythonFunctionsTest {
 	        businessEvent BusinessEvent (1..1)
 	    output:
 	        is_event boolean (1..1)
-	    	
-	    }
 	    '''.generatePython
 	    val expected = 
     	'''
+    	@replaceable
+    	@qualification_func
+    	def Qualify_OnDemandPayment(businessEvent: BusinessEvent) -> bool:
+    	    """
+    	    Qualification of a on-demand payment.
+    	    
+    	    Parameters 
+    	    ----------
+    	    businessEvent : BusinessEvent
+    	    
+    	    Returns
+    	    -------
+    	    is_event : boolean
+    	    
+    	    """
+    	    self = inspect.currentframe()
+    	    
+    	    
+    	    is_event = _resolve_rosetta_attr(self, "is_event")
+    	    
+    	    
+    	    return is_event
     	'''
+    	
+    	assertTrue(python.toString.contains(expected))
+    	
 	    }
 
 	def generatePython(CharSequence model) {
