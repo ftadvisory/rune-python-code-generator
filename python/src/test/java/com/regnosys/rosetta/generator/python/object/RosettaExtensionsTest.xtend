@@ -34,19 +34,19 @@ class RosettaExtensionsTest {
 		val expectedBaz=
 		'''
 		class Baz(BaseDataClass):
-		    pass
+		  pass
 		'''
 
 		val expectedBar=
 		'''
 		class Bar(Baz):
-		    pass
+		  pass
 		'''
 
 		val expectedFoo=
 		'''
 		class Foo(Bar):
-		    pass
+		  pass
 		'''
 
 		assertTrue(python.toString.contains(expectedBaz))

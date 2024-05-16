@@ -31,27 +31,32 @@ class PythonExpressionGeneratorTest {
 	        '''.generatePython    
 	     val expected= '''
 			class Test1(BaseDataClass):
-			    """
-			    Test choice condition.
-			    """
-			    field1: Optional[str] = Field(None, description="Test string field 1")
-			    """
-			    Test string field 1
-			    """
-			    field2: Optional[str] = Field(None, description="Test string field 2")
-			    """
-			    Test string field 2
-			    """
-			    field3: Optional[str] = Field(None, description="Test string field 3")
-			    """
-			    Test string field 3
-			    """
-			    
-			    @rosetta_condition
-			    def condition_0_TestChoice(self):
-			        item = self
-			        return self.check_one_of_constraint('field1', 'field2', 'field3', necessity=False)
-
+			  """
+			  Test choice condition.
+			  """
+			  
+			  field1: Optional[str] = Field(None, description="Test string field 1")
+			  
+			  """
+			  Test string field 1
+			  """
+			  
+			  field2: Optional[str] = Field(None, description="Test string field 2")
+			  
+			  """
+			  Test string field 2
+			  """
+			  
+			  field3: Optional[str] = Field(None, description="Test string field 3")
+			  
+			  """
+			  Test string field 3
+			  """
+			  
+			  @rosetta_condition
+			  def condition_0_TestChoice(self):
+			      item = self
+			      return self.check_one_of_constraint('field1', 'field2', 'field3', necessity=False)
 	     '''
 	     assertTrue(python.toString.contains(expected))
 	     
@@ -67,18 +72,20 @@ class PythonExpressionGeneratorTest {
 	        '''.generatePython    
 	     val expected= '''
 		     class Test1(BaseDataClass):
-		         """
-		         Test one-of condition.
-		         """
-		         field1: Optional[str] = Field(None, description="Test string field 1")
-		         """
-		         Test string field 1
-		         """
-		         
-		         @rosetta_condition
-		         def condition_0_OneOf(self):
-		             item = self
-		             return self.check_one_of_constraint('field1', necessity=True)
+		       """
+		       Test one-of condition.
+		       """
+		       
+		       field1: Optional[str] = Field(None, description="Test string field 1")
+		       
+		       """
+		       Test string field 1
+		       """
+		       
+		       @rosetta_condition
+		       def condition_0_OneOf(self):
+		           item = self
+		           return self.check_one_of_constraint('field1', necessity=True)
 	     '''
 	     assertTrue(python.toString.contains(expected))
 	     
@@ -97,31 +104,35 @@ class PythonExpressionGeneratorTest {
 	       	        
 	     val expected= '''
 		     class Test1(BaseDataClass):
-		         """
-		         Test if-then condition.
-		         """
-		         field1: Optional[str] = Field(None, description="Test string field 1")
-		         """
-		         Test string field 1
-		         """
-		         field2: Optional[Decimal] = Field(None, description="Test number field 2")
-		         """
-		         Test number field 2
-		         """
-		         
-		         @rosetta_condition
-		         def condition_0_TestCond(self):
-		             """
-		             Test condition
-		             """
-		             item = self
-		             def _then_fn0():
-		                 return all_elements(_resolve_rosetta_attr(self, "field2"), "=", 0)
-		             
-		             def _else_fn0():
-		                 return True
-		             
-		             return if_cond_fn(rosetta_attr_exists(_resolve_rosetta_attr(self, "field1")), _then_fn0, _else_fn0)
+		       """
+		       Test if-then condition.
+		       """
+		       
+		       field1: Optional[str] = Field(None, description="Test string field 1")
+		       
+		       """
+		       Test string field 1
+		       """
+		       
+		       field2: Optional[Decimal] = Field(None, description="Test number field 2")
+		       
+		       """
+		       Test number field 2
+		       """
+		       
+		       @rosetta_condition
+		       def condition_0_TestCond(self):
+		           """
+		           Test condition
+		           """
+		           item = self
+		           def _then_fn0():
+		               return all_elements(_resolve_rosetta_attr(self, "field2"), "=", 0)
+		           
+		           def _else_fn0():
+		               return True
+		           
+		           return if_cond_fn(rosetta_attr_exists(_resolve_rosetta_attr(self, "field1")), _then_fn0, _else_fn0)
 	     '''
 	     assertTrue(python.toString.contains(expected))
 	     
@@ -141,31 +152,35 @@ class PythonExpressionGeneratorTest {
 	       	        
 	     val expected= '''
 	     class Test1(BaseDataClass):
-	         """
-	         Test if-then-else condition.
-	         """
-	         field1: Optional[str] = Field(None, description="Test string field 1")
-	         """
-	         Test string field 1
-	         """
-	         field2: Optional[Decimal] = Field(None, description="Test number field 2")
-	         """
-	         Test number field 2
-	         """
-	         
-	         @rosetta_condition
-	         def condition_0_TestCond(self):
-	             """
-	             Test condition
-	             """
-	             item = self
-	             def _then_fn0():
-	                 return all_elements(_resolve_rosetta_attr(self, "field2"), "=", 0)
-	             
-	             def _else_fn0():
-	                 return all_elements(_resolve_rosetta_attr(self, "field2"), "=", 1)
-	             
-	             return if_cond_fn(rosetta_attr_exists(_resolve_rosetta_attr(self, "field1")), _then_fn0, _else_fn0)
+	       """
+	       Test if-then-else condition.
+	       """
+	       
+	       field1: Optional[str] = Field(None, description="Test string field 1")
+	       
+	       """
+	       Test string field 1
+	       """
+	       
+	       field2: Optional[Decimal] = Field(None, description="Test number field 2")
+	       
+	       """
+	       Test number field 2
+	       """
+	       
+	       @rosetta_condition
+	       def condition_0_TestCond(self):
+	           """
+	           Test condition
+	           """
+	           item = self
+	           def _then_fn0():
+	               return all_elements(_resolve_rosetta_attr(self, "field2"), "=", 0)
+	           
+	           def _else_fn0():
+	               return all_elements(_resolve_rosetta_attr(self, "field2"), "=", 1)
+	           
+	           return if_cond_fn(rosetta_attr_exists(_resolve_rosetta_attr(self, "field1")), _then_fn0, _else_fn0)
 	     '''
 	     assertTrue(python.toString.contains(expected))
 	     
@@ -184,31 +199,35 @@ class PythonExpressionGeneratorTest {
 			        '''.generatePython 
 	        val expected= '''
 	        class Test1(BaseDataClass):
-	            """
-	            Test boolean condition.
-	            """
-	            field1: bool = Field(..., description="Test booelan field 1")
-	            """
-	            Test booelan field 1
-	            """
-	            field2: Optional[Decimal] = Field(None, description="Test number field 2")
-	            """
-	            Test number field 2
-	            """
-	            
-	            @rosetta_condition
-	            def condition_0_TestCond(self):
-	                """
-	                Test condition
-	                """
-	                item = self
-	                def _then_fn0():
-	                    return all_elements(_resolve_rosetta_attr(self, "field2"), "=", 0)
-	                
-	                def _else_fn0():
-	                    return all_elements(_resolve_rosetta_attr(self, "field2"), "=", 5)
-	                
-	                return if_cond_fn(all_elements(_resolve_rosetta_attr(self, "field1"), "=", False), _then_fn0, _else_fn0)
+	          """
+	          Test boolean condition.
+	          """
+	          
+	          field1: bool = Field(..., description="Test booelan field 1")
+	          
+	          """
+	          Test booelan field 1
+	          """
+	          
+	          field2: Optional[Decimal] = Field(None, description="Test number field 2")
+	          
+	          """
+	          Test number field 2
+	          """
+	          
+	          @rosetta_condition
+	          def condition_0_TestCond(self):
+	              """
+	              Test condition
+	              """
+	              item = self
+	              def _then_fn0():
+	                  return all_elements(_resolve_rosetta_attr(self, "field2"), "=", 0)
+	              
+	              def _else_fn0():
+	                  return all_elements(_resolve_rosetta_attr(self, "field2"), "=", 5)
+	              
+	              return if_cond_fn(all_elements(_resolve_rosetta_attr(self, "field1"), "=", False), _then_fn0, _else_fn0)
 	        '''
        	assertTrue(python.toString.contains(expected))
 	                
@@ -227,31 +246,35 @@ class PythonExpressionGeneratorTest {
 	        '''.generatePython 
 	        val expected= '''
 	        class Test1(BaseDataClass):
-	            """
-	            Test absent condition.
-	            """
-	            field1: bool = Field(..., description="Test booelan field 1")
-	            """
-	            Test booelan field 1
-	            """
-	            field2: Optional[Decimal] = Field(None, description="Test number field 2")
-	            """
-	            Test number field 2
-	            """
-	            
-	            @rosetta_condition
-	            def condition_0_TestCond(self):
-	                """
-	                Test condition
-	                """
-	                item = self
-	                def _then_fn0():
-	                    return all_elements(_resolve_rosetta_attr(self, "field2"), "=", 0)
-	                
-	                def _else_fn0():
-	                    return (not rosetta_attr_exists(_resolve_rosetta_attr(self, "field2")))
-	                
-	                return if_cond_fn(all_elements(_resolve_rosetta_attr(self, "field1"), "=", False), _then_fn0, _else_fn0)
+	          """
+	          Test absent condition.
+	          """
+	          
+	          field1: bool = Field(..., description="Test booelan field 1")
+	          
+	          """
+	          Test booelan field 1
+	          """
+	          
+	          field2: Optional[Decimal] = Field(None, description="Test number field 2")
+	          
+	          """
+	          Test number field 2
+	          """
+	          
+	          @rosetta_condition
+	          def condition_0_TestCond(self):
+	              """
+	              Test condition
+	              """
+	              item = self
+	              def _then_fn0():
+	                  return all_elements(_resolve_rosetta_attr(self, "field2"), "=", 0)
+	              
+	              def _else_fn0():
+	                  return (not rosetta_attr_exists(_resolve_rosetta_attr(self, "field2")))
+	              
+	              return if_cond_fn(all_elements(_resolve_rosetta_attr(self, "field1"), "=", False), _then_fn0, _else_fn0)
 	        '''
        	assertTrue(python.toString.contains(expected))
 	                
@@ -286,32 +309,36 @@ class PythonExpressionGeneratorTest {
 	            """
 	        '''
 	        val expectedTest= '''
-	        class Test1(BaseDataClass):
-	            """
-	            Test only-element condition.
-	            """
-	            field1: Optional[com.rosetta.test.model.TestEnum.TestEnum] = Field(None, description="Test enum field 1")
-	            """
-	            Test enum field 1
-	            """
-	            field2: Optional[Decimal] = Field(None, description="Test number field 2")
-	            """
-	            Test number field 2
-	            """
-	            
-	            @rosetta_condition
-	            def condition_0_TestCond(self):
-	                """
-	                Test condition
-	                """
-	                item = self
-	                def _then_fn0():
-	                    return all_elements(_resolve_rosetta_attr(self, "field2"), "=", 0)
-	                
-	                def _else_fn0():
-	                    return True
-	                
-	                return if_cond_fn(all_elements(get_only_element(_resolve_rosetta_attr(self, "field1")), "=", _resolve_rosetta_attr(TestEnum, "TEST_ENUM_VALUE_1")), _then_fn0, _else_fn0)
+	       class Test1(BaseDataClass):
+	         """
+	         Test only-element condition.
+	         """
+	         
+	         field1: Optional[com.rosetta.test.model.TestEnum.TestEnum] = Field(None, description="Test enum field 1")
+	         
+	         """
+	         Test enum field 1
+	         """
+	         
+	         field2: Optional[Decimal] = Field(None, description="Test number field 2")
+	         
+	         """
+	         Test number field 2
+	         """
+	         
+	         @rosetta_condition
+	         def condition_0_TestCond(self):
+	             """
+	             Test condition
+	             """
+	             item = self
+	             def _then_fn0():
+	                 return all_elements(_resolve_rosetta_attr(self, "field2"), "=", 0)
+	             
+	             def _else_fn0():
+	                 return True
+	             
+	             return if_cond_fn(all_elements(get_only_element(_resolve_rosetta_attr(self, "field1")), "=", _resolve_rosetta_attr(TestEnum, "TEST_ENUM_VALUE_1")), _then_fn0, _else_fn0)
 	        '''
        	assertTrue(python.toString.contains(expectedEnum))
        	assertTrue(python.toString.contains(expectedTest))
@@ -330,21 +357,23 @@ class PythonExpressionGeneratorTest {
 	        
 	        val expected= '''
 	        class Test1(BaseDataClass):
-	            """
-	            Test rosetta number literal  condition.
-	            """
-	            field1: Optional[Decimal] = Field(None, description="Test number field 1")
-	            """
-	            Test number field 1
-	            """
-	            
-	            @rosetta_condition
-	            def condition_0_TestCond(self):
-	                """
-	                Test condition
-	                """
-	                item = self
-	                return _resolve_rosetta_attr(self, "field1")
+	          """
+	          Test rosetta number literal  condition.
+	          """
+	          
+	          field1: Optional[Decimal] = Field(None, description="Test number field 1")
+	          
+	          """
+	          Test number field 1
+	          """
+	          
+	          @rosetta_condition
+	          def condition_0_TestCond(self):
+	              """
+	              Test condition
+	              """
+	              item = self
+	              return _resolve_rosetta_attr(self, "field1")
 	        '''
 	     assertTrue(python.toString.contains(expected))
 	                
@@ -361,22 +390,23 @@ class PythonExpressionGeneratorTest {
 	        
 	        val expected= '''
 	        class Test1(BaseDataClass):
-	            """
-	            Test rosetta int literal  condition.
-	            """
-	            field1: Optional[int] = Field(None, description="Test int field 1")
-	            """
-	            Test int field 1
-	            """
-	            
-	            @rosetta_condition
-	            def condition_0_TestCond(self):
-	                """
-	                Test condition
-	                """
-	                item = self
-	                return _resolve_rosetta_attr(self, "field1")
-
+	          """
+	          Test rosetta int literal  condition.
+	          """
+	          
+	          field1: Optional[int] = Field(None, description="Test int field 1")
+	          
+	          """
+	          Test int field 1
+	          """
+	          
+	          @rosetta_condition
+	          def condition_0_TestCond(self):
+	              """
+	              Test condition
+	              """
+	              item = self
+	              return _resolve_rosetta_attr(self, "field1")
 	        '''
 	     assertTrue(python.toString.contains(expected))
 	                
@@ -394,21 +424,23 @@ class PythonExpressionGeneratorTest {
 	        
 	        val expected= '''
 	        class Test1(BaseDataClass):
-	            """
-	            Test rosetta string literal  condition.
-	            """
-	            field1: Optional[str] = Field(None, description="Test string field 1")
-	            """
-	            Test string field 1
-	            """
-	            
-	            @rosetta_condition
-	            def condition_0_TestCond(self):
-	                """
-	                Test condition
-	                """
-	                item = self
-	                return _resolve_rosetta_attr(self, "field1")
+	          """
+	          Test rosetta string literal  condition.
+	          """
+	          
+	          field1: Optional[str] = Field(None, description="Test string field 1")
+	          
+	          """
+	          Test string field 1
+	          """
+	          
+	          @rosetta_condition
+	          def condition_0_TestCond(self):
+	              """
+	              Test condition
+	              """
+	              item = self
+	              return _resolve_rosetta_attr(self, "field1")
 
 	        '''
 	     assertTrue(python.toString.contains(expected))
@@ -431,37 +463,41 @@ class PythonExpressionGeneratorTest {
 	        
 	        val expected= '''
 	        class Test(BaseDataClass):
-	            """
-	            Test only exists condition
-	            """
-	            aValue: com.rosetta.test.model.A.A = Field(..., description="Test A type aValue")
-	            """
-	            Test A type aValue
-	            """
-	            
-	            @rosetta_condition
-	            def condition_0_TestCond(self):
-	                """
-	                Test condition
-	                """
-	                item = self
-	                def _then_fn0():
-	                    return self.check_one_of_constraint(self, _resolve_rosetta_attr(_resolve_rosetta_attr(self, "aValue"), "field1"))
-	                
-	                def _else_fn0():
-	                    return True
-	                
-	                return if_cond_fn(rosetta_attr_exists(_resolve_rosetta_attr(_resolve_rosetta_attr(self, "aValue"), "field1")), _then_fn0, _else_fn0)
+	          """
+	          Test only exists condition
+	          """
+	          
+	          aValue: com.rosetta.test.model.A.A = Field(..., description="Test A type aValue")
+	          
+	          """
+	          Test A type aValue
+	          """
+	          
+	          @rosetta_condition
+	          def condition_0_TestCond(self):
+	              """
+	              Test condition
+	              """
+	              item = self
+	              def _then_fn0():
+	                  return self.check_one_of_constraint(self, _resolve_rosetta_attr(_resolve_rosetta_attr(self, "aValue"), "field1"))
+	              
+	              def _else_fn0():
+	                  return True
+	              
+	              return if_cond_fn(rosetta_attr_exists(_resolve_rosetta_attr(_resolve_rosetta_attr(self, "aValue"), "field1")), _then_fn0, _else_fn0)
 	        '''
 	        val expectedA ='''
 	        class A(BaseDataClass):
-	            """
-	            Test type
-	            """
-	            field1: Optional[Decimal] = Field(None, description="Test number field 1")
-	            """
-	            Test number field 1
-	            """
+	          """
+	          Test type
+	          """
+	          
+	          field1: Optional[Decimal] = Field(None, description="Test number field 1")
+	          
+	          """
+	          Test number field 1
+	          """
 	        '''
 	     assertTrue(python.toString.contains(expected))
  	     assertTrue(python.toString.contains(expectedA))
@@ -487,46 +523,52 @@ class PythonExpressionGeneratorTest {
 	        
 	        val expected= '''
 	        class Test(BaseDataClass):
-	            """
-	            Test count operation condition
-	            """
-	            aValue: List[com.rosetta.test.model.A.A] = Field([], description="Test A type aValue")
-	            """
-	            Test A type aValue
-	            """
-	            @rosetta_condition
-	            def cardinality_aValue(self):
-	                return check_cardinality(self.aValue, 1, None)
-	            
-	            
-	            @rosetta_condition
-	            def condition_0_TestCond(self):
-	                """
-	                Test condition
-	                """
-	                item = self
-	                def _then_fn0():
-	                    return False
-	                
-	                def _else_fn0():
-	                    return False
-	                
-	                return if_cond_fn(any_elements(rosetta_count(_resolve_rosetta_attr(_resolve_rosetta_attr(self, "aValue"), "field1")), "<>", rosetta_count(_resolve_rosetta_attr(_resolve_rosetta_attr(self, "aValue"), "field2"))), _then_fn0, _else_fn0)
+	          """
+	          Test count operation condition
+	          """
+	          
+	          aValue: List[com.rosetta.test.model.A.A] = Field([], description="Test A type aValue")
+	          
+	          """
+	          Test A type aValue
+	          """
+	          @rosetta_condition
+	          def cardinality_aValue(self):
+	            return check_cardinality(self.aValue, 1, None)
+	          
+	          
+	          @rosetta_condition
+	          def condition_0_TestCond(self):
+	              """
+	              Test condition
+	              """
+	              item = self
+	              def _then_fn0():
+	                  return False
+	              
+	              def _else_fn0():
+	                  return False
+	              
+	              return if_cond_fn(any_elements(rosetta_count(_resolve_rosetta_attr(_resolve_rosetta_attr(self, "aValue"), "field1")), "<>", rosetta_count(_resolve_rosetta_attr(_resolve_rosetta_attr(self, "aValue"), "field2"))), _then_fn0, _else_fn0)
 	        '''
 	        val expectedA ='''
-	        class A(BaseDataClass):
-	            """
-	            Test type
-	            """
-	            field1: List[int] = Field([], description="Test int field 1")
-	            """
-	            Test int field 1
-	            """
-	            field2: List[int] = Field([], description="Test int field 2")
-	            """
-	            Test int field 2
-	            """
-	            '''
+	      class A(BaseDataClass):
+	        """
+	        Test type
+	        """
+	        
+	        field1: List[int] = Field([], description="Test int field 1")
+	        
+	        """
+	        Test int field 1
+	        """
+	        
+	        field2: List[int] = Field([], description="Test int field 2")
+	        
+	        """
+	        Test int field 2
+	        """
+	      '''
 	     assertTrue(python.toString.contains(expected))
 	     assertTrue(python.toString.contains(expectedA))
 	                
@@ -545,32 +587,35 @@ class PythonExpressionGeneratorTest {
 	        
 	        val expected= '''
 	        class Test(BaseDataClass):
-	            """
-	            Test any operation condition
-	            """
-	            field1: str = Field(..., description="Test string field1")
-	            """
-	            Test string field1
-	            """
-	            field2: str = Field(..., description="Test boolean field2")
-	            """
-	            Test boolean field2
-	            """
-	            
-	            @rosetta_condition
-	            def condition_0_TestCond(self):
-	                """
-	                Test condition
-	                """
-	                item = self
-	                def _then_fn0():
-	                    return all_elements(["B", "C", "D"], "=", _resolve_rosetta_attr(self, "field2"))
-	                
-	                def _else_fn0():
-	                    return True
-	                
-	                return if_cond_fn(all_elements(_resolve_rosetta_attr(self, "field1"), "=", "A"), _then_fn0, _else_fn0)
-	        
+	          """
+	          Test any operation condition
+	          """
+	          
+	          field1: str = Field(..., description="Test string field1")
+	          
+	          """
+	          Test string field1
+	          """
+	          
+	          field2: str = Field(..., description="Test boolean field2")
+	          
+	          """
+	          Test boolean field2
+	          """
+	          
+	          @rosetta_condition
+	          def condition_0_TestCond(self):
+	              """
+	              Test condition
+	              """
+	              item = self
+	              def _then_fn0():
+	                  return all_elements(["B", "C", "D"], "=", _resolve_rosetta_attr(self, "field2"))
+	              
+	              def _else_fn0():
+	                  return True
+	              
+	              return if_cond_fn(all_elements(_resolve_rosetta_attr(self, "field1"), "=", "A"), _then_fn0, _else_fn0)
             '''
 	     assertTrue(python.toString.contains(expected))
 	                
@@ -595,50 +640,58 @@ class PythonExpressionGeneratorTest {
 	       
 	        val expected= '''
 	        class Test(BaseDataClass):
-	            """
-	            Test distinct operation condition
-	            """
-	            aValue: List[com.rosetta.test.model.A.A] = Field([], description="Test A type aValue")
-	            """
-	            Test A type aValue
-	            """
-	            @rosetta_condition
-	            def cardinality_aValue(self):
-	                return check_cardinality(self.aValue, 1, None)
-	            
-	            field3: Decimal = Field(..., description="Test number field 3")
-	            """
-	            Test number field 3
-	            """
-	            
-	            @rosetta_condition
-	            def condition_0_TestCond(self):
-	                """
-	                Test condition
-	                """
-	                item = self
-	                def _then_fn0():
-	                    return all_elements(_resolve_rosetta_attr(self, "field3"), "=", 0)
-	                
-	                def _else_fn0():
-	                    return all_elements(_resolve_rosetta_attr(self, "field3"), "=", 1)
-	                
-	                return if_cond_fn(all_elements(rosetta_count(set(_resolve_rosetta_attr(_resolve_rosetta_attr(self, "aValue"), "field1"))), "=", 1), _then_fn0, _else_fn0)
+	          """
+	          Test distinct operation condition
+	          """
+	          
+	          aValue: List[com.rosetta.test.model.A.A] = Field([], description="Test A type aValue")
+	          
+	          """
+	          Test A type aValue
+	          """
+	          @rosetta_condition
+	          def cardinality_aValue(self):
+	            return check_cardinality(self.aValue, 1, None)
+	          
+	          
+	          field3: Decimal = Field(..., description="Test number field 3")
+	          
+	          """
+	          Test number field 3
+	          """
+	          
+	          @rosetta_condition
+	          def condition_0_TestCond(self):
+	              """
+	              Test condition
+	              """
+	              item = self
+	              def _then_fn0():
+	                  return all_elements(_resolve_rosetta_attr(self, "field3"), "=", 0)
+	              
+	              def _else_fn0():
+	                  return all_elements(_resolve_rosetta_attr(self, "field3"), "=", 1)
+	              
+	              return if_cond_fn(all_elements(rosetta_count(set(_resolve_rosetta_attr(_resolve_rosetta_attr(self, "aValue"), "field1"))), "=", 1), _then_fn0, _else_fn0)
 	        '''
 	        
 	        val expectedClassA=  '''
 	        class A(BaseDataClass):
-	            """
-	            Test type
-	            """
-	            field1: List[int] = Field([], description="Test int field 1")
-	            """
-	            Test int field 1
-	            """
-	            field2: List[int] = Field([], description="Test int field 2")
-	            """
-	            Test int field 2
-	            """
+	          """
+	          Test type
+	          """
+	          
+	          field1: List[int] = Field([], description="Test int field 1")
+	          
+	          """
+	          Test int field 1
+	          """
+	          
+	          field2: List[int] = Field([], description="Test int field 2")
+	          
+	          """
+	          Test int field 2
+	          """
      		'''
 	        
        	assertTrue(python.toString.contains(expected))
@@ -661,41 +714,47 @@ class PythonExpressionGeneratorTest {
   		        
 	        val expected= '''
 	        class Test(BaseDataClass):
-	            """
-	            Test sort operation condition
-	            """
-	            aValue: com.rosetta.test.model.A.A = Field(..., description="Test A type aValue")
-	            """
-	            Test A type aValue
-	            """
-	            
-	            @rosetta_condition
-	            def condition_0_TestCond(self):
-	                """
-	                Test condition
-	                """
-	                item = self
-	                def _then_fn0():
-	                    return sorted(item)
-	                
-	                def _else_fn0():
-	                    return True
-	                
-	                return if_cond_fn(rosetta_attr_exists(_resolve_rosetta_attr(_resolve_rosetta_attr(self, "aValue"), "field1")), _then_fn0, _else_fn0)
+	          """
+	          Test sort operation condition
+	          """
+	          
+	          aValue: com.rosetta.test.model.A.A = Field(..., description="Test A type aValue")
+	          
+	          """
+	          Test A type aValue
+	          """
+	          
+	          @rosetta_condition
+	          def condition_0_TestCond(self):
+	              """
+	              Test condition
+	              """
+	              item = self
+	              def _then_fn0():
+	                  return sorted(item)
+	              
+	              def _else_fn0():
+	                  return True
+	              
+	              return if_cond_fn(rosetta_attr_exists(_resolve_rosetta_attr(_resolve_rosetta_attr(self, "aValue"), "field1")), _then_fn0, _else_fn0)
 	        '''
 	        val expectedClassA=  '''
 	        class A(BaseDataClass):
-	            """
-	            Test type
-	            """
-	            field1: Optional[int] = Field(None, description="Test int field 1")
-	            """
-	            Test int field 1
-	            """
-	            field2: Optional[int] = Field(None, description="Test int field 2")
-	            """
-	            Test int field 2
-	            """
+	          """
+	          Test type
+	          """
+	          
+	          field1: Optional[int] = Field(None, description="Test int field 1")
+	          
+	          """
+	          Test int field 1
+	          """
+	          
+	          field2: Optional[int] = Field(None, description="Test int field 2")
+	          
+	          """
+	          Test int field 2
+	          """
      		'''
        	assertTrue(python.toString.contains(expected))
        	assertTrue(python.toString.contains(expectedClassA))
@@ -716,43 +775,48 @@ class PythonExpressionGeneratorTest {
   		        '''.generatePython 
   		        
 	        val expected= '''
-	        class Test(BaseDataClass):
-	            """
-	            Test last operation condition
-	            """
-	            aValue: com.rosetta.test.model.A.A = Field(..., description="Test A type aValue")
-	            """
-	            Test A type aValue
-	            """
-	            
-	            @rosetta_condition
-	            def condition_0_TestCond(self):
-	                """
-	                Test condition
-	                """
-	                item = self
-	                def _then_fn0():
-	                    return _resolve_rosetta_attr(_resolve_rosetta_attr(self, "aValue"), "field1")[-1]
-	                
-	                def _else_fn0():
-	                    return True
-	                
-	                return if_cond_fn(rosetta_attr_exists(_resolve_rosetta_attr(_resolve_rosetta_attr(self, "aValue"), "field1")), _then_fn0, _else_fn0)
+	       class Test(BaseDataClass):
+	         """
+	         Test last operation condition
+	         """
+	         
+	         aValue: com.rosetta.test.model.A.A = Field(..., description="Test A type aValue")
+	         
+	         """
+	         Test A type aValue
+	         """
+	         
+	         @rosetta_condition
+	         def condition_0_TestCond(self):
+	             """
+	             Test condition
+	             """
+	             item = self
+	             def _then_fn0():
+	                 return _resolve_rosetta_attr(_resolve_rosetta_attr(self, "aValue"), "field1")[-1]
+	             
+	             def _else_fn0():
+	                 return True
+	             
+	             return if_cond_fn(rosetta_attr_exists(_resolve_rosetta_attr(_resolve_rosetta_attr(self, "aValue"), "field1")), _then_fn0, _else_fn0)
 	        '''
 	        val expectedClassA=  '''
  			class A(BaseDataClass):
- 			    """
- 			    Test type
- 			    """
- 			    field1: List[int] = Field([], description="Test int field 1")
- 			    """
- 			    Test int field 1
- 			    """
- 			    field2: Optional[int] = Field(None, description="Test int field 2")
- 			    """
- 			    Test int field 2
- 			    """
-
+ 			  """
+ 			  Test type
+ 			  """
+ 			  
+ 			  field1: List[int] = Field([], description="Test int field 1")
+ 			  
+ 			  """
+ 			  Test int field 1
+ 			  """
+ 			  
+ 			  field2: Optional[int] = Field(None, description="Test int field 2")
+ 			  
+ 			  """
+ 			  Test int field 2
+ 			  """
      		'''
        	assertTrue(python.toString.contains(expected))
        	assertTrue(python.toString.contains(expectedClassA))
@@ -774,42 +838,47 @@ class PythonExpressionGeneratorTest {
   		        
 	        val expected= '''
 	        class Test(BaseDataClass):
-	            """
-	            Test sum operation condition
-	            """
-	            aValue: com.rosetta.test.model.A.A = Field(..., description="Test A type aValue")
-	            """
-	            Test A type aValue
-	            """
-	            
-	            @rosetta_condition
-	            def condition_0_TestCond(self):
-	                """
-	                Test condition
-	                """
-	                item = self
-	                def _then_fn0():
-	                    return sum(_resolve_rosetta_attr(_resolve_rosetta_attr(self, "aValue"), "field1"))
-	                
-	                def _else_fn0():
-	                    return True
-	                
-	                return if_cond_fn(rosetta_attr_exists(_resolve_rosetta_attr(_resolve_rosetta_attr(self, "aValue"), "field1")), _then_fn0, _else_fn0)
+	          """
+	          Test sum operation condition
+	          """
+	          
+	          aValue: com.rosetta.test.model.A.A = Field(..., description="Test A type aValue")
+	          
+	          """
+	          Test A type aValue
+	          """
+	          
+	          @rosetta_condition
+	          def condition_0_TestCond(self):
+	              """
+	              Test condition
+	              """
+	              item = self
+	              def _then_fn0():
+	                  return sum(_resolve_rosetta_attr(_resolve_rosetta_attr(self, "aValue"), "field1"))
+	              
+	              def _else_fn0():
+	                  return True
+	              
+	              return if_cond_fn(rosetta_attr_exists(_resolve_rosetta_attr(_resolve_rosetta_attr(self, "aValue"), "field1")), _then_fn0, _else_fn0)
 	        '''
 	        val expectedClassA='''
 	        class A(BaseDataClass):
-	            """
-	            Test type
-	            """
-	            field1: List[int] = Field([], description="Test int field 1")
-	            """
-	            Test int field 1
-	            """
-	            field2: Optional[int] = Field(None, description="Test int field 2")
-	            """
-	            Test int field 2
-	            """
-
+	          """
+	          Test type
+	          """
+	          
+	          field1: List[int] = Field([], description="Test int field 1")
+	          
+	          """
+	          Test int field 1
+	          """
+	          
+	          field2: Optional[int] = Field(None, description="Test int field 2")
+	          
+	          """
+	          Test int field 2
+	          """
 	        '''
        	assertTrue(python.toString.contains(expected))
        	assertTrue(python.toString.contains(expectedClassA))         
@@ -830,35 +899,41 @@ class PythonExpressionGeneratorTest {
   		        
 	        val expected= '''
 	        class Test(BaseDataClass):
-	            """
-	            Test filter operation condition
-	            """
-	            aValue: com.rosetta.test.model.A.A = Field(..., description="Test A type aValue")
-	            """
-	            Test A type aValue
-	            """
-	            
-	            @rosetta_condition
-	            def condition_0_TestCond(self):
-	                """
-	                Test condition
-	                """
-	                item = self
-	                return (lambda item: _resolve_rosetta_attr(_resolve_rosetta_attr(self, "aValue"), "field2")[0])(rosetta_filter(item, lambda item: _resolve_rosetta_attr(_resolve_rosetta_attr(self, "aValue"), "field1")))
+	          """
+	          Test filter operation condition
+	          """
+	          
+	          aValue: com.rosetta.test.model.A.A = Field(..., description="Test A type aValue")
+	          
+	          """
+	          Test A type aValue
+	          """
+	          
+	          @rosetta_condition
+	          def condition_0_TestCond(self):
+	              """
+	              Test condition
+	              """
+	              item = self
+	              return (lambda item: _resolve_rosetta_attr(_resolve_rosetta_attr(self, "aValue"), "field2")[0])(rosetta_filter(item, lambda item: _resolve_rosetta_attr(_resolve_rosetta_attr(self, "aValue"), "field1")))
 	        '''
 	        val expectedClassA='''
 	        class A(BaseDataClass):
-	            """
-	            Test type
-	            """
-	            field1: bool = Field(..., description="Test int field 1")
-	            """
-	            Test int field 1
-	            """
-	            field2: List[int] = Field([], description="Test int field 2")
-	            """
-	            Test int field 2
-	            """
+	          """
+	          Test type
+	          """
+	          
+	          field1: bool = Field(..., description="Test int field 1")
+	          
+	          """
+	          Test int field 1
+	          """
+	          
+	          field2: List[int] = Field([], description="Test int field 2")
+	          
+	          """
+	          Test int field 2
+	          """
 	        '''
        	assertTrue(python.toString.contains(expected))
        	assertTrue(python.toString.contains(expectedClassA))         
@@ -944,59 +1019,71 @@ class PythonExpressionGeneratorTest {
   		        
 	        val expected= '''
 	        class Test(BaseDataClass):
-	            """
-	            Test filter operation condition
-	            """
-	            bValue: List[com.rosetta.test.model.B.B] = Field([], description="Test B type bValue")
-	            """
-	            Test B type bValue
-	            """
-	            field3: Optional[bool] = Field(None, description="Test bool type field3")
-	            """
-	            Test bool type field3
-	            """
-	            
-	            @rosetta_condition
-	            def condition_0_TestCond(self):
-	                """
-	                Test condition
-	                """
-	                item = self
-	                def _then_fn0():
-	                    return contains(_resolve_rosetta_attr(_resolve_rosetta_attr(_resolve_rosetta_attr(self, "bValue"), "aValue"), "cValue"), _resolve_rosetta_attr(C, "FIELD_4"))
-	                
-	                def _else_fn0():
-	                    return True
-	                
-	                return if_cond_fn(all_elements(_resolve_rosetta_attr(self, "field3"), "=", False), _then_fn0, _else_fn0)
+	          """
+	          Test filter operation condition
+	          """
+	          
+	          bValue: List[com.rosetta.test.model.B.B] = Field([], description="Test B type bValue")
+	          
+	          """
+	          Test B type bValue
+	          """
+	          
+	          field3: Optional[bool] = Field(None, description="Test bool type field3")
+	          
+	          """
+	          Test bool type field3
+	          """
+	          
+	          @rosetta_condition
+	          def condition_0_TestCond(self):
+	              """
+	              Test condition
+	              """
+	              item = self
+	              def _then_fn0():
+	                  return contains(_resolve_rosetta_attr(_resolve_rosetta_attr(_resolve_rosetta_attr(self, "bValue"), "aValue"), "cValue"), _resolve_rosetta_attr(C, "FIELD_4"))
+	              
+	              def _else_fn0():
+	                  return True
+	              
+	              return if_cond_fn(all_elements(_resolve_rosetta_attr(self, "field3"), "=", False), _then_fn0, _else_fn0)
 	        '''
 	        val expectedClassA='''
 	        class A(BaseDataClass):
-	            """
-	            Test type
-	            """
-	            field1: List[int] = Field([], description="Test int field 1")
-	            """
-	            Test int field 1
-	            """
-	            cValue: List[com.rosetta.test.model.C.C] = Field([], description="Test C type cValue")
-	            """
-	            Test C type cValue
-	            """
+	          """
+	          Test type
+	          """
+	          
+	          field1: List[int] = Field([], description="Test int field 1")
+	          
+	          """
+	          Test int field 1
+	          """
+	          
+	          cValue: List[com.rosetta.test.model.C.C] = Field([], description="Test C type cValue")
+	          
+	          """
+	          Test C type cValue
+	          """
 	        '''
 	        val expectedClassB='''
 	        class B(BaseDataClass):
-	            """
-	            Test type B
-	            """
-	            field2: List[int] = Field([], description="Test int field 2")
-	            """
-	            Test int field 2
-	            """
-	            aValue: List[com.rosetta.test.model.A.A] = Field([], description="Test A type aValue")
-	            """
-	            Test A type aValue
-	            """
+	          """
+	          Test type B
+	          """
+	          
+	          field2: List[int] = Field([], description="Test int field 2")
+	          
+	          """
+	          Test int field 2
+	          """
+	          
+	          aValue: List[com.rosetta.test.model.A.A] = Field([], description="Test A type aValue")
+	          
+	          """
+	          Test A type aValue
+	          """
 	        '''
 	        
 	        val expectedClassC='''
@@ -1035,42 +1122,47 @@ class PythonExpressionGeneratorTest {
 	        
 	        val expected= '''
 	        class Test(BaseDataClass):
-	            """
-	            Test disjoint binary expression condition
-	            """
-	            field1: str = Field(..., description="Test string field1")
-	            """
-	            Test string field1
-	            """
-	            field2: str = Field(..., description="Test string field2")
-	            """
-	            Test string field2
-	            """
-	            field3: bool = Field(..., description="Test boolean field3")
-	            """
-	            Test boolean field3
-	            """
-	            
-	            @rosetta_condition
-	            def condition_0_TestCond(self):
-	                """
-	                Test condition
-	                """
-	                item = self
-	                def _then_fn1():
-	                    return all_elements(_resolve_rosetta_attr(self, "field3"), "=", False)
-	                
-	                def _else_fn1():
-	                    return True
-	                
-	                def _then_fn0():
-	                    return if_cond_fn((all_elements(["B", "C", "D"], "=", _resolve_rosetta_attr(self, "field2")) and disjoint(["A"], _resolve_rosetta_attr(self, "field1"))), _then_fn1, _else_fn1)
-	                
-	                def _else_fn0():
-	                    return True
-	                
-	                return if_cond_fn(all_elements(_resolve_rosetta_attr(self, "field3"), "=", False), _then_fn0, _else_fn0)
-            '''
+	          """
+	          Test disjoint binary expression condition
+	          """
+	          
+	          field1: str = Field(..., description="Test string field1")
+	          
+	          """
+	          Test string field1
+	          """
+	          
+	          field2: str = Field(..., description="Test string field2")
+	          
+	          """
+	          Test string field2
+	          """
+	          
+	          field3: bool = Field(..., description="Test boolean field3")
+	          
+	          """
+	          Test boolean field3
+	          """
+	          
+	          @rosetta_condition
+	          def condition_0_TestCond(self):
+	              """
+	              Test condition
+	              """
+	              item = self
+	              def _then_fn1():
+	                  return all_elements(_resolve_rosetta_attr(self, "field3"), "=", False)
+	              
+	              def _else_fn1():
+	                  return True
+	              
+	              def _then_fn0():
+	                  return if_cond_fn((all_elements(["B", "C", "D"], "=", _resolve_rosetta_attr(self, "field2")) and disjoint(["A"], _resolve_rosetta_attr(self, "field1"))), _then_fn1, _else_fn1)
+	              
+	              def _else_fn0():
+	                  return True
+	              
+	        '''
 	     assertTrue(python.toString.contains(expected))
 	                
     }
@@ -1089,41 +1181,47 @@ class PythonExpressionGeneratorTest {
 	        
 	        val expected= '''
 	        class Test(BaseDataClass):
-	            """
-	            Test join binary expression condition
-	            """
-	            field1: str = Field(..., description="Test string field1")
-	            """
-	            Test string field1
-	            """
-	            field2: str = Field(..., description="Test string field2")
-	            """
-	            Test string field2
-	            """
-	            field3: bool = Field(..., description="Test boolean field3")
-	            """
-	            Test boolean field3
-	            """
-	            
-	            @rosetta_condition
-	            def condition_0_TestCond(self):
-	                """
-	                Test condition
-	                """
-	                item = self
-	                def _then_fn1():
-	                    return join(item, _resolve_rosetta_attr(self, "field1"))
-	                
-	                def _else_fn1():
-	                    return True
-	                
-	                def _then_fn0():
-	                    return if_cond_fn(all_elements(["B", "C", "D"], "=", _resolve_rosetta_attr(self, "field2")), _then_fn1, _else_fn1)
-	                
-	                def _else_fn0():
-	                    return True
-	                
-	                return if_cond_fn(all_elements(_resolve_rosetta_attr(self, "field3"), "=", False), _then_fn0, _else_fn0)
+	          """
+	          Test join binary expression condition
+	          """
+	          
+	          field1: str = Field(..., description="Test string field1")
+	          
+	          """
+	          Test string field1
+	          """
+	          
+	          field2: str = Field(..., description="Test string field2")
+	          
+	          """
+	          Test string field2
+	          """
+	          
+	          field3: bool = Field(..., description="Test boolean field3")
+	          
+	          """
+	          Test boolean field3
+	          """
+	          
+	          @rosetta_condition
+	          def condition_0_TestCond(self):
+	              """
+	              Test condition
+	              """
+	              item = self
+	              def _then_fn1():
+	                  return join(item, _resolve_rosetta_attr(self, "field1"))
+	              
+	              def _else_fn1():
+	                  return True
+	              
+	              def _then_fn0():
+	                  return if_cond_fn(all_elements(["B", "C", "D"], "=", _resolve_rosetta_attr(self, "field2")), _then_fn1, _else_fn1)
+	              
+	              def _else_fn0():
+	                  return True
+	              
+	              return if_cond_fn(all_elements(_resolve_rosetta_attr(self, "field3"), "=", False), _then_fn0, _else_fn0)
 	        '''
 	     assertTrue(python.toString.contains(expected))
 	                
