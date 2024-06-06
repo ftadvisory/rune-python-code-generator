@@ -8,18 +8,19 @@ fi
 
 export PYTHONDONTWRITEBYTECODE=1
 
-ACDIR=$($PYEXE -c "import sys;print('Scripts' if sys.platform.startswith('win') else 'bin')")
+MYPATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+cd $MYPATH
 $PYEXE -m venv --clear .pydevenv
+
+ACDIR=$($PYEXE -c "import sys;print('Scripts' if sys.platform.startswith('win') else 'bin')")
 source .pydevenv/$ACDIR/activate
 
-MYPATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-echo $MYPATH
 ROSETTARUNTIMEDIR="../../src/main/resources/runtime"
 PYTHONUNITTESTDIR="../../target/python_unit_tests"
 
 $PYEXE -m pip install pydantic
 $PYEXE -m pip install pytest
-$PYEXE -m pip install $MYPATH/$ROSETTARUNTIMEDIR/rosetta_runtime-2.0.0-py3-none-any.whl 
+$PYEXE -m pip install $MYPATH/$ROSETTARUNTIMEDIR/rosetta_runtime-2.1.0-py3-none-any.whl --force-reinstall
 
 cd $MYPATH/$PYTHONUNITTESTDIR
 $PYEXE -m pip wheel --no-deps --only-binary :all: . || processError

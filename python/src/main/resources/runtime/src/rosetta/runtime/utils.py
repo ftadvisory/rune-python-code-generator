@@ -6,6 +6,7 @@ from typing import TypeVar, Generic, Callable, Any
 from functools import wraps
 from collections import defaultdict
 from pydantic import BaseModel, ValidationError, ConfigDict
+import keyword
 
 __all__ = ['if_cond', 'if_cond_fn', 'Multiprop', 'rosetta_condition',
            'BaseDataClass', 'ConditionViolationError', 'any_elements',
@@ -57,9 +58,11 @@ def _is_meta(obj: Any) -> bool:
               AttributeWithMetaWithAddress, AttributeWithMetaWithReference,
               AttributeWithMetaWithAddressWithReference))
 
-
-_NAME_MANGLE_MAP = {'global': 'rosetta_attr_global'}
-
+def mangle_name (attrib: str) -> str:
+    '''mangle any attrib that is a Python keyword begins with _'''
+    return  'rosetta_attr_' + attrib if (keyword.iskeyword(attrib) or 
+                                         keyword.issoftkeyword(attrib) or 
+                                         attrib.startswith('_')) else attrib
 
 def rosetta_resolve_attr(obj: Any | None,
                          attrib: str) -> Any | list[Any] | None:
@@ -81,7 +84,7 @@ def rosetta_resolve_attr(obj: Any | None,
         # In the future one might want to check if the attrib is contained
         # in the metadata and return it instead of failing.
         obj = obj.value
-    attrib = _NAME_MANGLE_MAP.get(attrib, attrib)
+    attrib = mangle_name(attrib)
     return getattr(obj, attrib, None)
 
 

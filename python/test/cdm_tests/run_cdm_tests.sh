@@ -17,7 +17,7 @@ ROSETTARUNTIMEDIR="../../src/main/resources/runtime"
 PYTHONCDMDIR="../../target/python"
 $PYEXE -m pip install pydantic
 $PYEXE -m pip install pytest
-$PYEXE -m pip install $MYPATH/$ROSETTARUNTIMEDIR/rosetta_runtime-2.0.0-py3-none-any.whl 
+$PYEXE -m pip install $MYPATH/$ROSETTARUNTIMEDIR/rosetta_runtime-2.1.0-py3-none-any.whl 
 
 # install cdm package
 $PYEXE -m pip install $MYPATH/$PYTHONCDMDIR/python_cdm-*-py3-none-any.whl
