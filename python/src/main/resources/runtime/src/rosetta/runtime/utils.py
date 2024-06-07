@@ -58,11 +58,11 @@ def _is_meta(obj: Any) -> bool:
               AttributeWithMetaWithAddress, AttributeWithMetaWithReference,
               AttributeWithMetaWithAddressWithReference))
 
-def mangle_name (attrib: str) -> str:
-    '''mangle any attrib that is a Python keyword begins with _'''
-    return  'rosetta_attr_' + attrib if (keyword.iskeyword(attrib) or 
-                                         keyword.issoftkeyword(attrib) or 
-                                         attrib.startswith('_')) else attrib
+def mangle_name(attrib: str) -> str:
+    '''mangle any attrib that is a Python keyword, is a Python soft keyword or begins with _'''
+    if (keyword.iskeyword(attrib) or keyword.issoftkeyword(attrib) or attrib.startswith('_')):
+        return 'rosetta_attr_' + attrib
+    return attrib
 
 def rosetta_resolve_attr(obj: Any | None,
                          attrib: str) -> Any | list[Any] | None:

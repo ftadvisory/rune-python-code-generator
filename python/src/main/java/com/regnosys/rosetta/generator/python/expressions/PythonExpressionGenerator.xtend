@@ -42,6 +42,8 @@ import com.regnosys.rosetta.rosetta.expression.RosettaSymbolReference
 import com.regnosys.rosetta.rosetta.expression.SortOperation
 import com.regnosys.rosetta.rosetta.expression.SumOperation
 import com.regnosys.rosetta.rosetta.expression.ThenOperation
+import com.regnosys.rosetta.rosetta.expression.ToStringOperation
+import com.regnosys.rosetta.rosetta.expression.ToEnumOperation
 import com.regnosys.rosetta.rosetta.simple.Attribute
 import com.regnosys.rosetta.rosetta.simple.Condition
 import com.regnosys.rosetta.rosetta.simple.Data
@@ -52,7 +54,6 @@ import java.util.List
 
 class PythonExpressionGenerator {
 
-    
     public var List<String> importsFound
     public var if_cond_blocks = new ArrayList<String>()
 
@@ -356,7 +357,12 @@ class PythonExpressionGenerator {
 
                 return pythonConstructor
             }
-
+            ToStringOperation: {
+               	return '''"string dummy"'''
+            }
+            ToEnumOperation: {
+               	return '''"enum dummy"'''
+            }
             default:
                 throw new UnsupportedOperationException("Unsupported expression type of " + expr?.class?.simpleName)
         }
