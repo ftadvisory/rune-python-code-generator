@@ -28,7 +28,8 @@ __all__ = ['if_cond', 'if_cond_fn', 'Multiprop', 'rosetta_condition',
            'AttributeWithMetaWithAddress',
            'AttributeWithMetaWithReference',
            'AttributeWithAddressWithReference',
-           'AttributeWithMetaWithAddressWithReference']
+           'AttributeWithMetaWithAddressWithReference',
+           'rosetta_str']
 
 
 def if_cond(ifexpr, thenexpr: str, elseexpr: str, obj: object):
@@ -412,6 +413,10 @@ def _ntoz(v):
         return 0
     return v
 
+def rosetta_str(x):
+    if isinstance(x, Enum):
+        return x.value
+    return str(x)
 
 _cmp = {
     '=': lambda x, y: _ntoz(x) == _ntoz(y),

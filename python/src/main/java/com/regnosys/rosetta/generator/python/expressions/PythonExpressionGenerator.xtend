@@ -358,10 +358,12 @@ class PythonExpressionGenerator {
                 return pythonConstructor
             }
             ToStringOperation: {
-               	return '''"string dummy"'''
+                val argument = generateExpression(expr.argument, iflvl);
+                return '''rosetta_str(«argument»)''';
             }
             ToEnumOperation: {
-               	return '''"enum dummy"'''
+                val argument = generateExpression(expr.argument, iflvl);
+                return '''«expr.enumeration.name»(«argument»)''';
             }
             default:
                 throw new UnsupportedOperationException("Unsupported expression type of " + expr?.class?.simpleName)
