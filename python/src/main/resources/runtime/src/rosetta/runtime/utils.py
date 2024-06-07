@@ -1,13 +1,13 @@
 '''Utility functions (runtime) for rosetta models.'''
 from __future__ import annotations
 import logging as log
+import keyword
 from enum import Enum
 from typing import get_args, get_origin
 from typing import TypeVar, Generic, Callable, Any
 from functools import wraps
 from collections import defaultdict
 from pydantic import BaseModel, ValidationError, ConfigDict
-import keyword
 
 __all__ = ['if_cond', 'if_cond_fn', 'Multiprop', 'rosetta_condition',
            'BaseDataClass', 'ConditionViolationError', 'any_elements',
@@ -112,7 +112,7 @@ def rosetta_attr_exists(val: Any) -> bool:
     return True
 
 
-def rosetta_str(x):
+def rosetta_str(x: Any) -> str:
     '''Returns a Rosetta conform string representation'''
     if isinstance(x, Enum):
         x = x.value
