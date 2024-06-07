@@ -1,6 +1,7 @@
 '''Utility functions (runtime) for rosetta models.'''
 from __future__ import annotations
 import logging as log
+from enum import Enum
 from typing import get_args, get_origin
 from typing import TypeVar, Generic, Callable, Any
 from functools import wraps
@@ -59,11 +60,16 @@ def _is_meta(obj: Any) -> bool:
               AttributeWithMetaWithAddress, AttributeWithMetaWithReference,
               AttributeWithMetaWithAddressWithReference))
 
+
 def mangle_name(attrib: str) -> str:
-    '''mangle any attrib that is a Python keyword, is a Python soft keyword or begins with _'''
-    if (keyword.iskeyword(attrib) or keyword.issoftkeyword(attrib) or attrib.startswith('_')):
+    ''' Mangle any attrib that is a Python keyword, is a Python soft keyword
+        or begins with _
+    '''
+    if (keyword.iskeyword(attrib) or keyword.issoftkeyword(attrib)
+            or attrib.startswith('_')):
         return 'rosetta_attr_' + attrib
     return attrib
+
 
 def rosetta_resolve_attr(obj: Any | None,
                          attrib: str) -> Any | list[Any] | None:
@@ -104,6 +110,13 @@ def rosetta_attr_exists(val: Any) -> bool:
     if val is None or val == []:
         return False
     return True
+
+
+def rosetta_str(x):
+    '''Returns a Rosetta conform string representation'''
+    if isinstance(x, Enum):
+        x = x.value
+    return str(x)
 
 
 def _get_rosetta_object(base_model: str, attribute: str, value: Any) -> Any:
@@ -413,10 +426,6 @@ def _ntoz(v):
         return 0
     return v
 
-def rosetta_str(x):
-    if isinstance(x, Enum):
-        return x.value
-    return str(x)
 
 _cmp = {
     '=': lambda x, y: _ntoz(x) == _ntoz(y),
