@@ -151,10 +151,27 @@ def rosetta_condition(condition):
     name = path_components[-1]
     _CONDITIONS_REGISTRY[path][name] = condition
 
-    @wraps(condition)
-    def wrapper(*args, **kwargs):
-        return condition(*args, **kwargs)
-    return wrapper
+    return condition
+
+
+def rosetta_local_condition(registry: dict):
+    '''Registers a condition function in a local registry.'''
+    def decorator(condition):
+        path_components = condition.__qualname__.split('.')
+        path = '.'.join([condition.__module__ or ''] + path_components)
+        registry[path] = condition
+
+        return condition
+
+    return decorator
+
+
+def execute_local_conditions(registry: dict, cond_type: str):
+    '''Executes all registered in a local registry.'''
+    for condition_path, condition_func in registry.items():
+        if not condition_func():
+            raise ConditionViolationError(
+                f"{cond_type} '{condition_path}' failed.")
 
 
 def rosetta_local_condition(registry: dict):
@@ -379,7 +396,7 @@ class AttributeWithMeta(BaseModel, Generic[ValueT]):
 class AttributeWithAddress(BaseModel, Generic[ValueT]):
     '''Meta support'''
     address: MetaAddress | None = None
-    value: ValueT | None = None
+    value: ValueT
 
 
 class AttributeWithReference(BaseDataClass):
