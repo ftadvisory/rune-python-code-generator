@@ -1,6 +1,6 @@
 import pytest
 from rosetta.runtime.utils import rosetta_resolve_attr
-from rosetta.test.model.ClassMemberAccess import ClassMemberAccess
+from rosetta_dsl.test.model.ClassMemberAccess import ClassMemberAccess
  
 class_member_access = ClassMemberAccess(one=42, three=[1, 2, 3])
 
