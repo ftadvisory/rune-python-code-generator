@@ -373,7 +373,7 @@ class AttributeWithMeta(BaseModel, Generic[ValueT]):
 class AttributeWithAddress(BaseModel, Generic[ValueT]):
     '''Meta support'''
     address: MetaAddress | None = None
-    value: ValueT | None = None
+    value: ValueT
 
 
 class AttributeWithReference(BaseDataClass):
