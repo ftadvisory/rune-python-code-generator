@@ -151,10 +151,7 @@ def rosetta_condition(condition):
     name = path_components[-1]
     _CONDITIONS_REGISTRY[path][name] = condition
 
-    @wraps(condition)
-    def wrapper(*args, **kwargs):
-        return condition(*args, **kwargs)
-    return wrapper
+    return condition
 
 
 def rosetta_local_condition(registry: dict):
@@ -164,10 +161,7 @@ def rosetta_local_condition(registry: dict):
         path = '.'.join([condition.__module__ or ''] + path_components)
         registry[path] = condition
 
-        @wraps(condition)
-        def wrapper(*args, **kwargs):
-            return condition(*args, **kwargs)
-        return wrapper
+        return condition
 
     return decorator
 
