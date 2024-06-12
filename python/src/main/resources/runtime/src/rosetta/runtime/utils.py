@@ -1,6 +1,7 @@
 '''Utility functions (runtime) for rosetta models.'''
 from __future__ import annotations
 import logging as log
+import inspect
 from typing import get_args, get_origin
 from typing import TypeVar, Generic, Callable, Any
 from functools import wraps
@@ -35,7 +36,7 @@ __all__ = ['if_cond', 'if_cond_fn', 'Multiprop', 'rosetta_condition',
            'AttributeWithMetaWithScheme',
            'solve_metadata_key', 'solve_metalocation',
            'calculation_func','qualification_func',
-           'scheme']
+           'scheme','check_one_of']
 
 
 def if_cond(ifexpr, thenexpr: str, elseexpr: str, obj: object):
@@ -81,6 +82,10 @@ def _resolve_rosetta_attr(obj: Any | None,
         # In the future one might want to check if the attrib is contained
         # in the metadata and return it instead of failing.
         obj = obj.value
+    if inspect.isframe(obj):
+        obj=getattr(obj,'f_locals')
+        if (isinstance(obj, dict)):
+            return obj[attrib]
     return getattr(obj, attrib, None)
 
 
@@ -215,6 +220,19 @@ def execute_local_conditions(registry: dict, cond_type: str):
             raise ConditionViolationError(
                 f"{cond_type} '{condition_path}' failed.")
 
+def check_one_of(self, *attr_names, necessity=True) -> bool:
+    """ Checks that one and only one attribute is set. """
+    if inspect.isframe(self):
+        values=getattr(self,'f_locals')
+    vals = [values.get(n) for n in attr_names]
+    n_attr = sum(1 for v in vals if v is not None and v != [])
+    if necessity and n_attr != 1:
+        log.error('One and only one of %s should be set!', attr_names)
+        return False
+    if not necessity and n_attr > 1:
+        log.error('Only one of %s can be set!', attr_names)
+        return False
+    return True
 
 class ConditionViolationError(ValueError):
     '''Exception thrown on violation of a constraint'''
@@ -671,7 +689,8 @@ def rosetta_filter(items, filter_func, item_name='item'):
         expression.
     :return: Filtered list.
     """
-    return [item for item in items if filter_func(locals()[item_name])]
+    if items!=None:
+        return [item for item in items if filter_func(locals()[item_name])]
 
 
 def set_rosetta_attr(obj: Any, path: str, value: Any) -> None:

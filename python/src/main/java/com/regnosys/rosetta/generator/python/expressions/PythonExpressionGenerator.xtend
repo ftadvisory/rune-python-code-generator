@@ -53,7 +53,7 @@ import java.util.List
 class PythonExpressionGenerator {
 
     
-    public var List<String> importsFound
+    public var List<String> importsFound= newArrayList
     public var if_cond_blocks = new ArrayList<String>()
 
     def String generateConditions(Data cls) {
