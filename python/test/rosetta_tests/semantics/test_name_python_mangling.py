@@ -2,6 +2,7 @@
 from rosetta.runtime.utils import rosetta_resolve_attr
 from rosetta_dsl.test.semantic.PythonNameMangling import PythonNameMangling
 
+
 def test_python_global_create():
     PythonNameMangling(rosetta_attr_global=5)
 

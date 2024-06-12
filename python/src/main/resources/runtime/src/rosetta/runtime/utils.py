@@ -174,6 +174,29 @@ def execute_local_conditions(registry: dict, cond_type: str):
                 f"{cond_type} '{condition_path}' failed.")
 
 
+def rosetta_local_condition(registry: dict):
+    '''Registers a condition function in a local registry.'''
+    def decorator(condition):
+        path_components = condition.__qualname__.split('.')
+        path = '.'.join([condition.__module__ or ''] + path_components)
+        registry[path] = condition
+
+        @wraps(condition)
+        def wrapper(*args, **kwargs):
+            return condition(*args, **kwargs)
+        return wrapper
+
+    return decorator
+
+
+def execute_local_conditions(registry: dict, cond_type: str):
+    '''Executes all registered in a local registry.'''
+    for condition_path, condition_func in registry.items():
+        if not condition_func():
+            raise ConditionViolationError(
+                f"{cond_type} '{condition_path}' failed.")
+
+
 class ConditionViolationError(ValueError):
     '''Exception thrown on violation of a constraint'''
 

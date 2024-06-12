@@ -1,5 +1,4 @@
 '''PEP 396 module version attribute in PEP 440 version format'''
-
 version = (2, 1, 0, 0)
 
 # pylint: disable=invalid-name
