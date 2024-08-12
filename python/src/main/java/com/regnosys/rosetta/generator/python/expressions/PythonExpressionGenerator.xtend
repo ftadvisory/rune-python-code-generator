@@ -266,7 +266,7 @@ class PythonExpressionGenerator {
             }
             RosettaOnlyExistsExpression: {
                 var aux = expr as RosettaOnlyExistsExpression;
-                '''self.check_one_of_constraint(self, «generateExpression(aux.getArgs().get(0), iflvl)»)'''
+                '''check_one_of(self, «generateExpression(aux.getArgs().get(0), iflvl)»)'''
             }
             RosettaCountOperation: {
                 val argument = expr.argument as RosettaExpression
@@ -315,8 +315,15 @@ class PythonExpressionGenerator {
                 val argument = generateExpression(expr.argument, iflvl);
 
                 val filterExpression = generateExpression(expr.function.body, iflvl);
+                var newExpression=""
+                if (filterExpression.contains("_resolve_rosetta_attr(self,")){
+                	newExpression=filterExpression.replace("_resolve_rosetta_attr(self","_resolve_rosetta_attr("+argument)
+                }
+                else{
+                	newExpression=filterExpression
+                }
 
-                val filterCall = "rosetta_filter(" + argument + ", lambda item: " + filterExpression + ")";
+                val filterCall = "rosetta_filter(" + argument + ", lambda item: " + newExpression+")";
 
                 return filterCall;
             }

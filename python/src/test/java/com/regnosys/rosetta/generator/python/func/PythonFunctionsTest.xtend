@@ -1022,7 +1022,24 @@ class PythonFunctionsTest {
     	assertTrue(python.toString.contains(expected))
     	
 	    }
-
+	    
+	    
+    @Test
+    def void prova(){
+    	val python = 
+    	'''
+    	func FilterClosedTradeStates: <"Filter to only 'closed' TradeState - where either the closedState or positionState are set.">
+    	    inputs:
+    	        tradeStates TradeState (0..*)
+    	    output:
+    	        closedTradeStates TradeState (0..*)
+    	
+    	    add closedTradeStates: tradeStates filter state -> closedState exists
+    	'''.generatePython
+    	val expected='''
+    	'''
+    	
+    	}
 	def generatePython(CharSequence model) {
 		val m = model.parseRosetta
         val resourceSet = m.eResource.resourceSet

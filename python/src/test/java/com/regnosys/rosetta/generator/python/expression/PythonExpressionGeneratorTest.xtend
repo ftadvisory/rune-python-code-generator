@@ -347,6 +347,7 @@ class PythonExpressionGeneratorTest {
     
     @Test
     def void shouldGenerateNumberLiteralCondition(){
+
     	val python = '''
     	  	type Test1: <"Test rosetta number literal  condition.">
 	        	field1 number (0..1) <"Test number field 1">
@@ -939,7 +940,6 @@ class PythonExpressionGeneratorTest {
        	assertTrue(python.toString.contains(expectedClassA))         
     }
     
-    
     @Ignore
     def void shouldGenerateFlattenCondition(){
     	val python = '''
@@ -1226,7 +1226,6 @@ class PythonExpressionGeneratorTest {
 	     assertTrue(python.toString.contains(expected))
 	                
     }
-    
     
     
 	

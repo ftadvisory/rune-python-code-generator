@@ -24,7 +24,6 @@ def test_trade_state_reference_pos (cdm_sample_in=None):
     json_str = Path(cdm_sample_in).read_text()
     tradestate = TradeState.model_validate_json(json_str)
     assert isinstance(tradestate.trade.tradableProduct.product.contractualProduct.economicTerms.payout.interestRatePayout[1].resetDates.fixingDates.dateRelativeTo, AttributeWithReference), "calculationPeriodDatesReference is not an instance of calculationPeriodDates"
-    #tradestate.validate_meta()
     tradestate.resolve_references()
     assert 'globalKey' in tradestate.trade.tradableProduct.product.contractualProduct.economicTerms.payout.interestRatePayout[1].resetDates.fixingDates.dateRelativeTo.meta, "reference is not resolved"
 def test_trade_state_reference_neg (cdm_sample_in = None):

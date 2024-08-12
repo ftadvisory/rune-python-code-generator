@@ -674,7 +674,14 @@ def get_only_element(collection):
 
 def flatten_list(nested_list):
     '''flattens the list of lists (no-recursively)'''
-    return [item for sublist in nested_list for item in sublist]
+    flattened_list = []
+    for sublist in nested_list:
+        try:
+            for item in sublist:
+                flattened_list.append(item)
+        except:
+            flattened_list.append(sublist)
+    return flattened_list
 
 
 def rosetta_filter(items, filter_func, item_name='item'):
