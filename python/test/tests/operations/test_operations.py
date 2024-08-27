@@ -81,13 +81,15 @@ def test_filteroperation():
             self.partyRole1={'role':"Seller"}
             self.partyRole2={'role':None}
             self.partyRole3={'role':"Client"}
-            self.partyRoles=[self.partyRole1,self.partyRole2,self.partyRole3]
+            self.partyRole4={'role':'Asian'}
+            self.partyRoles=[self.partyRole1,self.partyRole2,self.partyRole3,self.partyRole4]
             self.partyRoleEnum=["Seller","Client"]
 
     self = T()
     res = rosetta_filter(_resolve_rosetta_attr(self, "partyRoles"), lambda item: all_elements(
-        _resolve_rosetta_attr(_resolve_rosetta_attr(self, "partyRoles"), "role"), "=",
+        _resolve_rosetta_attr(item, "role"), "=",
         _resolve_rosetta_attr(self,  "partyRoleEnum")))
+    print(res)
     assert self.partyRole1 in res and self.partyRole3 in res
 
 def test_distinct_operation():
