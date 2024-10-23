@@ -29,17 +29,17 @@ class ModelObjectGeneratorTest {
                 list string (0..*)
         '''.generatePython
 
-		
-		val expected=
-		'''
-		class Tester(BaseDataClass):
-		    one: Optional[str] = Field(None, description="")
-		    list: List[str] = Field([], description="")
+        
+        val expected=
+        '''
+        class Tester(BaseDataClass):
+            one: Optional[str] = Field(None, description="")
+            list: List[str] = Field([], description="")
 
         '''
-		
-		assertTrue(python.toString.contains(expected))
-	}
+        
+        assertTrue(python.toString.contains(expected))
+    }
 
     @Test
     def void generateIntBasicType() {
@@ -49,15 +49,15 @@ class ModelObjectGeneratorTest {
                 list int (0..*)
         '''.generatePython
 
-		val expected=
-		'''
-		class Tester(BaseDataClass):
-		    one: Optional[int] = Field(None, description="")
-		    list: List[int] = Field([], description="")
+        val expected=
+        '''
+        class Tester(BaseDataClass):
+            one: Optional[int] = Field(None, description="")
+            list: List[int] = Field([], description="")
 
         '''
-		
-		assertTrue(python.toString.contains(expected))
+        
+        assertTrue(python.toString.contains(expected))
 
     }
 
@@ -69,17 +69,17 @@ class ModelObjectGeneratorTest {
                 list number (0..*)
         '''.generatePython
 
-		
-		
-		val expected=
-		'''
-		class Tester(BaseDataClass):
-		    one: Optional[Decimal] = Field(None, description="")
-		    list: List[Decimal] = Field([], description="")
+        
+        
+        val expected=
+        '''
+        class Tester(BaseDataClass):
+            one: Optional[Decimal] = Field(None, description="")
+            list: List[Decimal] = Field([], description="")
 
         '''
-		
-		assertTrue(python.toString.contains(expected))
+        
+        assertTrue(python.toString.contains(expected))
 
     }
 
@@ -91,17 +91,17 @@ class ModelObjectGeneratorTest {
                 list boolean (0..*)
         '''.generatePython
 
-		
-		
-		val expected=
-		'''
-		class Tester(BaseDataClass):
-		    one: Optional[bool] = Field(None, description="")
-		    list: List[bool] = Field([], description="")
-		'''
-		
-		assertTrue(python.toString.contains(expected))
-	}
+        
+        
+        val expected=
+        '''
+        class Tester(BaseDataClass):
+            one: Optional[bool] = Field(None, description="")
+            list: List[bool] = Field([], description="")
+        '''
+        
+        assertTrue(python.toString.contains(expected))
+    }
 
     @Test
     def void generateDateBasicType() {
@@ -111,18 +111,18 @@ class ModelObjectGeneratorTest {
                 list date (0..*)
         '''.generatePython
 
-		
-		
-		val expected=
-		'''
-		class Tester(BaseDataClass):
-		    one: Optional[datetime.date] = Field(None, description="")
-		    list: List[datetime.date] = Field([], description="")
+        
+        
+        val expected=
+        '''
+        class Tester(BaseDataClass):
+            one: Optional[datetime.date] = Field(None, description="")
+            list: List[datetime.date] = Field([], description="")
 
         '''
-		
-		assertTrue(python.toString.contains(expected))
-	}
+        
+        assertTrue(python.toString.contains(expected))
+    }
 
     @Test
     def void generateDateTimeBasicType() {
@@ -133,35 +133,35 @@ class ModelObjectGeneratorTest {
                 zoned zonedDateTime (0..1)
         '''.generatePython
 
-		val expected=
-		'''
-		class Tester(BaseDataClass):
-		    one: Optional[datetime.date] = Field(None, description="")
-		    list: List[datetime.date] = Field([], description="")
-		    zoned: Optional[datetime.datetime] = Field(None, description="")
-		'''
-		
-		assertTrue(python.toString.contains(expected))
-	}
+        val expected=
+        '''
+        class Tester(BaseDataClass):
+            one: Optional[datetime.date] = Field(None, description="")
+            list: List[datetime.date] = Field([], description="")
+            zoned: Optional[datetime.datetime] = Field(None, description="")
+        '''
+        
+        assertTrue(python.toString.contains(expected))
+    }
 
-	@Test
-	def void generateTimeBasicType() {
-		val python = '''
-			type Tester:
-				one time (0..1)
-				list time (0..*)
-		'''.generatePython
-	
-		val expected=
-		'''
-		class Tester(BaseDataClass):
-		    one: Optional[datetime.time] = Field(None, description="")
-		    list: List[datetime.time] = Field([], description="")
+    @Test
+    def void generateTimeBasicType() {
+        val python = '''
+            type Tester:
+                one time (0..1)
+                list time (0..*)
+        '''.generatePython
+    
+        val expected=
+        '''
+        class Tester(BaseDataClass):
+            one: Optional[datetime.time] = Field(None, description="")
+            list: List[datetime.time] = Field([], description="")
 
         '''
-		
-		assertTrue(python.toString.contains(expected))
-	}
+        
+        assertTrue(python.toString.contains(expected))
+    }
 
 
 
@@ -259,17 +259,17 @@ class ModelObjectGeneratorTest {
                 withoutGlobalKey string (1..1)
         '''.generatePython
 
-		
-		
-		val expected=
-		'''
-		class AttributeGlobalKeyTest(BaseDataClass):
-		    withoutGlobalKey: str = Field(..., description="")
+        
+        
+        val expected=
+        '''
+        class AttributeGlobalKeyTest(BaseDataClass):
+            withoutGlobalKey: str = Field(..., description="")
 
         '''
-		
-		assertTrue(python.toString.contains(expected))
-	}
+        
+        assertTrue(python.toString.contains(expected))
+    }
 
     @Test
     @Disabled
@@ -303,75 +303,75 @@ class ModelObjectGeneratorTest {
                 s string (1..*)
         '''.generatePython
 
-		
-		val expectedB=
-		'''
-		class B(BaseDataClass):
-		    pass
-		'''
+        
+        val expectedB=
+        '''
+        class B(BaseDataClass):
+            pass
+        '''
 
-		val expectedC =
-		'''
-		class C(BaseDataClass):
-		    one: Optional[int] = Field(None, description="")
-		    list: List[int] = Field([], description="")
+        val expectedC =
+        '''
+        class C(BaseDataClass):
+            one: Optional[int] = Field(None, description="")
+            list: List[int] = Field([], description="")
 
         '''
 
-		val expectedA =
-		'''
-		class A(B):
-		    c: List[com.rosetta.test.model.C.C] = Field([], description="")
-		    @rosetta_condition
-		    def cardinality_c(self):
-		        return check_cardinality(self.c, 1, None)
-		'''
+        val expectedA =
+        '''
+        class A(B):
+            c: List[com.rosetta.test.model.C.C] = Field([], description="")
+            @rosetta_condition
+            def cardinality_c(self):
+                return check_cardinality(self.c, 1, None)
+        '''
 
-		val expectedD =
-		'''
-		class D(BaseDataClass):
-		    s: List[str] = Field([], description="")
-		    @rosetta_condition
-		    def cardinality_s(self):
-		        return check_cardinality(self.s, 1, None)
-		'''
-		
-		assertTrue(python.toString.contains(expectedA))
-		assertTrue(python.toString.contains(expectedB))
-		assertTrue(python.toString.contains(expectedC))
-		assertTrue(python.toString.contains(expectedD))
-			
-	}
+        val expectedD =
+        '''
+        class D(BaseDataClass):
+            s: List[str] = Field([], description="")
+            @rosetta_condition
+            def cardinality_s(self):
+                return check_cardinality(self.s, 1, None)
+        '''
+        
+        assertTrue(python.toString.contains(expectedA))
+        assertTrue(python.toString.contains(expectedB))
+        assertTrue(python.toString.contains(expectedC))
+        assertTrue(python.toString.contains(expectedD))
+            
+    }
 
-	@Test
-	def void shouldExtendATypeWithSameAttribute() {
-		val python = '''
-			type Foo:
-				a string (0..1)
-				b string (0..1)
-			
-			type Bar extends Foo:
-				a string (0..1)
-		'''.generatePython
-	
-		val expectedFoo=
-		'''
-		class Foo(BaseDataClass):
-		    a: Optional[str] = Field(None, description="")
-		    b: Optional[str] = Field(None, description="")
+    @Test
+    def void shouldExtendATypeWithSameAttribute() {
+        val python = '''
+            type Foo:
+                a string (0..1)
+                b string (0..1)
+            
+            type Bar extends Foo:
+                a string (0..1)
+        '''.generatePython
+    
+        val expectedFoo=
+        '''
+        class Foo(BaseDataClass):
+            a: Optional[str] = Field(None, description="")
+            b: Optional[str] = Field(None, description="")
 
         '''
 
-		val expectedBar =
-		'''
-		class Bar(Foo):
-		    a: Optional[str] = Field(None, description="")
+        val expectedBar =
+        '''
+        class Bar(Foo):
+            a: Optional[str] = Field(None, description="")
 
-		'''
-		
-		assertTrue(python.toString.contains(expectedFoo))
-		assertTrue(python.toString.contains(expectedBar))
-	}
+        '''
+        
+        assertTrue(python.toString.contains(expectedFoo))
+        assertTrue(python.toString.contains(expectedBar))
+    }
 
     @Test
     def shouldGenerateRosettaCalculationTypeAsString() {
@@ -380,62 +380,62 @@ class ModelObjectGeneratorTest {
                 bar calculation (0..1)
         '''.generatePython
 
-		
-		val expected=
-		'''
-		class Foo(BaseDataClass):
-		    bar: Optional[str] = Field(None, description="")
+        
+        val expected=
+        '''
+        class Foo(BaseDataClass):
+            bar: Optional[str] = Field(None, description="")
 
         '''
-		
-		assertTrue(python.toString.contains(expected))
-	}
+        
+        assertTrue(python.toString.contains(expected))
+    }
 
-	@Test
-	def void shouldSetAttributesOnEmptyClassWithInheritance() {
-		val python = '''
-			type Foo:
-				attr string (0..1)
-			
-			type Bar extends Foo:
-		'''.generatePython
-		
-		val expectedFoo=
-		'''
-		class Foo(BaseDataClass):
-		    attr: Optional[str] = Field(None, description="")
-		'''
+    @Test
+    def void shouldSetAttributesOnEmptyClassWithInheritance() {
+        val python = '''
+            type Foo:
+                attr string (0..1)
+            
+            type Bar extends Foo:
+        '''.generatePython
+        
+        val expectedFoo=
+        '''
+        class Foo(BaseDataClass):
+            attr: Optional[str] = Field(None, description="")
+        '''
 
-		val expectedBar=
-		'''
-		class Bar(Foo):
-		    pass
-		'''
-		
-		assertTrue(python.toString.contains(expectedFoo))
-		assertTrue(python.toString.contains(expectedBar))
-	}
-	
-	@Test
-	@Disabled
-	def void isProductWithEnumValueRef() {
-		'''
-			isProduct root Foo;
-			
-			enum Enum: 
-				A
-				B
-			
-			type Foo:
-				attr Enum (0..1)
-			
-			func Qualify_FooProd:
-				[qualification Product]
-				inputs: foo Foo (1..1)
-				output: is_product boolean (1..1)
-				set is_product:
-					foo -> attr = Enum -> A
-		'''.generatePython
+        val expectedBar=
+        '''
+        class Bar(Foo):
+            pass
+        '''
+        
+        assertTrue(python.toString.contains(expectedFoo))
+        assertTrue(python.toString.contains(expectedBar))
+    }
+    
+    @Test
+    @Disabled
+    def void isProductWithEnumValueRef() {
+        '''
+            isProduct root Foo;
+            
+            enum Enum: 
+                A
+                B
+            
+            type Foo:
+                attr Enum (0..1)
+            
+            func Qualify_FooProd:
+                [qualification Product]
+                inputs: foo Foo (1..1)
+                output: is_product boolean (1..1)
+                set is_product:
+                    foo -> attr = Enum -> A
+        '''.generatePython
 
     }
 

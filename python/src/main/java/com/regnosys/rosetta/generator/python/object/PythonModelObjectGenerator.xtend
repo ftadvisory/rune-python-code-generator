@@ -6,18 +6,28 @@ import com.regnosys.rosetta.generator.python.expressions.PythonExpressionGenerat
 import com.regnosys.rosetta.generator.python.util.PythonModelGeneratorUtil
 import com.regnosys.rosetta.rosetta.RosettaMetaType
 import com.regnosys.rosetta.rosetta.RosettaModel
+import com.regnosys.rosetta.types.RObjectFactory
+import com.regnosys.rosetta.types.RDataType
+import com.regnosys.rosetta.types.RChoiceType
+import com.regnosys.rosetta.types.RAttribute
+import com.regnosys.rosetta.utils.DeepFeatureCallUtil
 import com.regnosys.rosetta.rosetta.simple.Data
 import com.regnosys.rosetta.generator.python.util.PythonTranslator
 import com.regnosys.rosetta.generator.python.util.Util
 import java.util.HashMap
 import java.util.List
+import java.util.ArrayList
 import java.util.Map
+import org.slf4j.LoggerFactory
 
 import static extension com.regnosys.rosetta.generator.util.RosettaAttributeExtensions.*
 import com.regnosys.rosetta.RosettaEcoreUtil
 
 class PythonModelObjectGenerator {
+    static val LOGGER = LoggerFactory.getLogger(PythonModelObjectGenerator);
 
+    @Inject extension RObjectFactory
+    @Inject extension DeepFeatureCallUtil
     @Inject extension RosettaEcoreUtil
     @Inject extension PythonModelObjectBoilerPlate
     @Inject PythonExpressionGenerator expressionGenerator;
@@ -75,12 +85,62 @@ class PythonModelObjectGenerator {
             val model = type.eContainer as RosettaModel
             val namespace = Util::getNamespace (model)
             val classes = type.generateClasses(namespace, version).replaceTabsWithSpaces
-            result.put(PythonModelGeneratorUtil::toPyFileName(model.name, type.name), PythonModelGeneratorUtil::createImports(type.name) + classes)
+            result.put(PythonModelGeneratorUtil::toPyFileName(model.name, type.name), 
+                PythonModelGeneratorUtil::createImports(type.name) + classes
+            )
         }
 
         result;
     }
-
+    def Map<String, ArrayList<String>> getChoiceAliases (RDataType choiceType) {
+        if (!choiceType.isEligibleForDeepFeatureCall()) {
+            return null
+        }
+        LOGGER.info("PythonModelObjectGenerator::getDeepPath ... getChoiceAliases for name: {}", choiceType.getName)
+//		val dependencies = new HashSet<JavaClass<?>>()
+        val deepFeatures = choiceType.findDeepFeatures
+        for (df: deepFeatures) {
+            println ('##### getChoiceAliases df:' + df)
+        }
+        // Create choiceAlias using toMap
+        val choiceAlias = deepFeatures.toMap(
+            [ deepFeature | deepFeature.name ], // Key extractor: use deepFeature name as the key
+            [ deepFeature | // Value extractor: create and populate the list of aliases
+                val aliasList = new ArrayList<String>()
+        
+                // Iterate over all non-overridden attributes
+                choiceType.allNonOverridenAttributes.forEach [ attribute |
+                    val attrType = attribute.RType
+                    var t = attrType
+        
+                    // Convert RChoiceType to RDataType if applicable
+                    if (t instanceof RChoiceType) {
+                        t = t.asRDataType
+                    }
+        
+                    // Check if t is an instance of RDataType
+                    if (t instanceof RDataType) {
+                        // Add the new alias to the list
+                        aliasList.add(t.name + '.' + deepFeature.name)
+        
+                        // Check if the deep feature map contains the attribute name
+                        if (t.findDeepFeatureMap.containsKey(attribute.name)) {
+                            // Uncomment and implement if needed
+                            // dependencies.add(t.toDeepPathUtilJavaClass)
+                        }
+                    }
+                ]
+                // Return the populated list for this deepFeature
+                aliasList
+            ]
+        )
+        println('##### choiceAlias ... start')
+        for (k : choiceAlias.keySet) {
+            println('choiceAlias {' + k + ':' + choiceAlias.get(k) + '}')
+        }
+        println('##### choiceAlias ... end')
+        choiceAlias
+    }
     def boolean checkBasicType(ExpandedAttribute rosettaAttribute) {
         val rosettaType = (rosettaAttribute !== null) ? rosettaAttribute.toRawType : null;
         return (rosettaType !== null && PythonTranslator::checkPythonType (rosettaType.toString()))
@@ -133,8 +193,16 @@ class PythonModelObjectGenerator {
     }
 
     private def generateClassDefinition(Data rosettaClass) {
+        val t = rosettaClass.buildRDataType // USAGE HERE!
+        val choiceAliases = getChoiceAliases (t)
+        if (choiceAliases !== null) {
+            println ('generateClassDefinition ... choiceAliases: ' + choiceAliases)
+        }
         return '''
             class «rosettaClass.name»«IF rosettaClass.superType === null»«ENDIF»«IF rosettaClass.superType !== null»(«rosettaClass.superType.name»):«ELSE»(BaseDataClass):«ENDIF»
+                «IF choiceAliases !== null»
+                    CHOICE_ALIAS_MAP =«choiceAliases»
+                «ENDIF»
                 «IF rosettaClass.definition !== null»
                     """
                     «rosettaClass.definition»

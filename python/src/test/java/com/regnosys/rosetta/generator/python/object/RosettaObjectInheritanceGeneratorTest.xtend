@@ -40,40 +40,40 @@ class RosettaObjectInheritanceGeneratorTest {
 
         '''.generatePython
 
-		
-		val expectedA=
-		'''
-		class A(BaseDataClass):
-		    aa: Optional[str] = Field(None, description="")
+        
+        val expectedA=
+        '''
+        class A(BaseDataClass):
+            aa: Optional[str] = Field(None, description="")
 
         '''
 
-		val expectedB=
-		'''
-		class B(A):
-		    bb: Optional[str] = Field(None, description="")
+        val expectedB=
+        '''
+        class B(A):
+            bb: Optional[str] = Field(None, description="")
 
-		'''
+        '''
 
-		val expectedC=
-		'''
-		class C(B):
-		    cc: Optional[str] = Field(None, description="")
+        val expectedC=
+        '''
+        class C(B):
+            cc: Optional[str] = Field(None, description="")
 
-		'''
+        '''
 
-		val expectedD=
-		'''
-		class D(C):
-		    dd: Optional[str] = Field(None, description="")
+        val expectedD=
+        '''
+        class D(C):
+            dd: Optional[str] = Field(None, description="")
 
-		'''
-		
-		assertTrue(python.toString.contains(expectedA))
-		assertTrue(python.toString.contains(expectedB))
-		assertTrue(python.toString.contains(expectedC))
-		assertTrue(python.toString.contains(expectedD))
-	}
+        '''
+        
+        assertTrue(python.toString.contains(expectedA))
+        assertTrue(python.toString.contains(expectedB))
+        assertTrue(python.toString.contains(expectedC))
+        assertTrue(python.toString.contains(expectedD))
+    }
 
 
 
