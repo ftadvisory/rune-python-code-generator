@@ -22,15 +22,16 @@ class PythonExpressionGeneratorTest {
     
     @Test
     def void shouldGenerateChoiceCondition() {
-        val python = '''
+        val python = 
+            '''
             type Test1:<"Test choice condition.">
                 field1 string (0..1) <"Test string field 1">
                 field2 string (0..1) <"Test string field 2">
                 field3 string (0..1) <"Test string field 3">
                 condition TestChoice: optional choice field1, field2, field3
             '''.generatePython    
-         val expected= '''
-            class Test1(BaseDataClass):
+        val expected=
+            '''class Test1(BaseDataClass):
                 """
                 Test choice condition.
                 """
@@ -46,47 +47,41 @@ class PythonExpressionGeneratorTest {
                 """
                 Test string field 3
                 """
-                
+
                 @rosetta_condition
                 def condition_0_TestChoice(self):
                     item = self
-                    return self.check_one_of_constraint('field1', 'field2', 'field3', necessity=False)
-
-         '''
-         assertTrue(python.toString.contains(expected))
-         
+                    return self.check_one_of_constraint('field1', 'field2', 'field3', necessity=False)'''
+        assertTrue(python.toString.contains(expected))
     }
     
     @Test
     def void shouldGenerateOneOfCondition() {
-        val python = '''
-            type Test1:<"Test one-of condition.">
+        val python = '''type Test1:<"Test one-of condition.">
                 field1 string (0..1) <"Test string field 1">
-                
+
                 condition OneOf: one-of
             '''.generatePython    
-         val expected= '''
-             class Test1(BaseDataClass):
-                 """
-                 Test one-of condition.
-                 """
-                 field1: Optional[str] = Field(None, description="Test string field 1")
-                 """
-                 Test string field 1
-                 """
-                 
-                 @rosetta_condition
-                 def condition_0_OneOf(self):
-                     item = self
-                     return self.check_one_of_constraint('field1', necessity=True)
-         '''
+        val expected= '''class Test1(BaseDataClass):
+            """
+            Test one-of condition.
+            """
+            field1: Optional[str] = Field(None, description="Test string field 1")
+            """
+            Test string field 1
+            """
+
+            @rosetta_condition
+            def condition_0_OneOf(self):
+                item = self
+                return self.check_one_of_constraint('field1', necessity=True)'''
          assertTrue(python.toString.contains(expected))
          
     }
     
     @Test
     def void shouldGenerateIfThenCondition() {
-         val python = '''
+        val python = '''
             type Test1: <"Test if-then condition.">
                 field1 string (0..1) <"Test string field 1">
                 field2 number (0..1) <"Test number field 2">
@@ -95,34 +90,33 @@ class PythonExpressionGeneratorTest {
                         then field2=0
             '''.generatePython    
                        
-         val expected= '''
-             class Test1(BaseDataClass):
-                 """
-                 Test if-then condition.
-                 """
-                 field1: Optional[str] = Field(None, description="Test string field 1")
-                 """
-                 Test string field 1
-                 """
-                 field2: Optional[Decimal] = Field(None, description="Test number field 2")
-                 """
-                 Test number field 2
-                 """
-                 
-                 @rosetta_condition
-                 def condition_0_TestCond(self):
-                     """
-                     Test condition
-                     """
-                     item = self
-                     def _then_fn0():
-                         return all_elements(rosetta_resolve_attr(self, "field2"), "=", 0)
-                     
-                     def _else_fn0():
-                         return True
-                     
-                     return if_cond_fn(rosetta_attr_exists(rosetta_resolve_attr(self, "field1")), _then_fn0, _else_fn0)
-         '''
+        val expected = 
+        '''class Test1(BaseDataClass):
+                """
+                Test if-then condition.
+                """
+                field1: Optional[str] = Field(None, description="Test string field 1")
+                """
+                Test string field 1
+                """
+                field2: Optional[Decimal] = Field(None, description="Test number field 2")
+                """
+                Test number field 2
+                """
+                
+                @rosetta_condition
+                def condition_0_TestCond(self):
+                    """
+                    Test condition
+                    """
+                    item = self
+                    def _then_fn0():
+                        return all_elements(rosetta_resolve_attr(self, "field2"), "=", 0)
+                    
+                    def _else_fn0():
+                        return True
+                    
+                    return if_cond_fn(rosetta_attr_exists(rosetta_resolve_attr(self, "field1")), _then_fn0, _else_fn0)'''
          assertTrue(python.toString.contains(expected))
          
     }
@@ -139,36 +133,35 @@ class PythonExpressionGeneratorTest {
                         else field2=1
             '''.generatePython    
                        
-         val expected= '''
-         class Test1(BaseDataClass):
-             """
-             Test if-then-else condition.
-             """
-             field1: Optional[str] = Field(None, description="Test string field 1")
-             """
-             Test string field 1
-             """
-             field2: Optional[Decimal] = Field(None, description="Test number field 2")
-             """
-             Test number field 2
-             """
-             
-             @rosetta_condition
-             def condition_0_TestCond(self):
-                 """
-                 Test condition
-                 """
-                 item = self
-                 def _then_fn0():
-                     return all_elements(rosetta_resolve_attr(self, "field2"), "=", 0)
-                 
-                 def _else_fn0():
-                     return all_elements(rosetta_resolve_attr(self, "field2"), "=", 1)
-                 
-                 return if_cond_fn(rosetta_attr_exists(rosetta_resolve_attr(self, "field1")), _then_fn0, _else_fn0)
+         val expected= 
+         '''class Test1(BaseDataClass):
+                """
+                Test if-then-else condition.
+                """
+                field1: Optional[str] = Field(None, description="Test string field 1")
+                """
+                Test string field 1
+                """
+                field2: Optional[Decimal] = Field(None, description="Test number field 2")
+                """
+                Test number field 2
+                """
+                
+                @rosetta_condition
+                def condition_0_TestCond(self):
+                    """
+                    Test condition
+                    """
+                    item = self
+                    def _then_fn0():
+                        return all_elements(rosetta_resolve_attr(self, "field2"), "=", 0)
+                    
+                    def _else_fn0():
+                        return all_elements(rosetta_resolve_attr(self, "field2"), "=", 1)
+                    
+                    return if_cond_fn(rosetta_attr_exists(rosetta_resolve_attr(self, "field1")), _then_fn0, _else_fn0)
          '''
          assertTrue(python.toString.contains(expected))
-         
     }
     
     @Test

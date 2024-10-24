@@ -96,13 +96,34 @@ class PythonModelObjectGenerator {
         if (!choiceType.isEligibleForDeepFeatureCall()) {
             return null
         }
-        LOGGER.info("PythonModelObjectGenerator::getDeepPath ... getChoiceAliases for name: {}", choiceType.getName)
-//		val dependencies = new HashSet<JavaClass<?>>()
+        LOGGER.info("PythonModelObjectGenerator::getChoiceAliases ... getChoiceAliases for name: {}", choiceType.getName)
+		val deepReferenceMap = new HashMap <String, ArrayList<String>>()
         val deepFeatures = choiceType.findDeepFeatures
-        for (df: deepFeatures) {
-            println ('##### getChoiceAliases df:' + df)
-        }
-        // Create choiceAlias using toMap
+        LOGGER.debug("PythonModelObjectGenerator::getChoiceAliases ... create recursiveDeepFeaturesMap")
+		val recursiveDeepFeaturesMap = choiceType.allNonOverridenAttributes.toMap([it], [
+			val attrType = it.RType
+			deepFeatures.toMap([it], [
+				var t = attrType
+				if (t instanceof RChoiceType) {
+					t = t.asRDataType
+				}
+				if (t instanceof RDataType) {
+					if (t.findDeepFeatureMap.containsKey(it.name)) {
+						// look for element in hashmap and create one if none found
+						var deepReference = deepReferenceMap.get(t.name)
+						if (deepReference === null) {
+							deepReference = new ArrayList<String>
+						}
+						// add the deep reference to the array and update the hashmap
+						deepReference.add (it.name)
+						deepReferenceMap.put(t.name, deepReference)
+						return true
+					}
+				}
+				return false
+			])
+		])
+        LOGGER.debug("PythonModelObjectGenerator::getChoiceAliases ... use toMap to create the aliases")
         val choiceAlias = deepFeatures.toMap(
             [ deepFeature | deepFeature.name ], // Key extractor: use deepFeature name as the key
             [ deepFeature | // Value extractor: create and populate the list of aliases
@@ -117,29 +138,20 @@ class PythonModelObjectGenerator {
                     if (t instanceof RChoiceType) {
                         t = t.asRDataType
                     }
-        
                     // Check if t is an instance of RDataType
                     if (t instanceof RDataType) {
-                        // Add the new alias to the list
-                        aliasList.add(t.name + '.' + deepFeature.name)
+                        // Add the new alias to the list.  Add a deep reference if necessary
+						val deepReference = deepReferenceMap.get (t.name)
+						val needDeepReference = (deepReference !== null && deepReference.contains(deepFeature.name)) ? "[USE_CHOICE_ALIAS]" : ""
+                        aliasList.add(needDeepReference + t.name + '.' + deepFeature.name)
         
-                        // Check if the deep feature map contains the attribute name
-                        if (t.findDeepFeatureMap.containsKey(attribute.name)) {
-                            // Uncomment and implement if needed
-                            // dependencies.add(t.toDeepPathUtilJavaClass)
-                        }
                     }
                 ]
                 // Return the populated list for this deepFeature
                 aliasList
             ]
         )
-        println('##### choiceAlias ... start')
-        for (k : choiceAlias.keySet) {
-            println('choiceAlias {' + k + ':' + choiceAlias.get(k) + '}')
-        }
-        println('##### choiceAlias ... end')
-        choiceAlias
+        return (choiceAlias.isEmpty ()) ? null : choiceAlias
     }
     def boolean checkBasicType(ExpandedAttribute rosettaAttribute) {
         val rosettaType = (rosettaAttribute !== null) ? rosettaAttribute.toRawType : null;
@@ -195,9 +207,6 @@ class PythonModelObjectGenerator {
     private def generateClassDefinition(Data rosettaClass) {
         val t = rosettaClass.buildRDataType // USAGE HERE!
         val choiceAliases = getChoiceAliases (t)
-        if (choiceAliases !== null) {
-            println ('generateClassDefinition ... choiceAliases: ' + choiceAliases)
-        }
         return '''
             class «rosettaClass.name»«IF rosettaClass.superType === null»«ENDIF»«IF rosettaClass.superType !== null»(«rosettaClass.superType.name»):«ELSE»(BaseDataClass):«ENDIF»
                 «IF choiceAliases !== null»

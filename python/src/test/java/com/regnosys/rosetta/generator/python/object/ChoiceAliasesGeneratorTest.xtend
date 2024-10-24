@@ -19,7 +19,7 @@ class ChoiceAliasGeneratorTest {
     @Inject PythonCodeGenerator generator;
 
     @Test
-    def void testDeepPath() {
+    def void testChoiceAliasGenerator() {
 /*
             func Check1:
                 inputs:
@@ -29,35 +29,30 @@ class ChoiceAliasGeneratorTest {
                 set result:
                     foo ->> deep1->attr 
 */
-        println ('***** testDeepPath - generatePython')
-
         val pythonCode = 
         '''
-            type Bar1:
-                deep1 Deep1 (1..1)
-                b1 int (1..1)
-                a int (1..1)
+		type Bar1:
+			deep1 Deep1 (1..1)
+			b1 int (1..1)
+			a int (1..1)
 
-            type Bar2:
-                deep1 Deep1 (1..1)
-                b1 int (1..1)
-                c int (1..1)
+		type Bar2:
+			deep1 Deep1 (1..1)
+			b1 int (1..1)
+			c int (1..1)
 
-            choice Foo:
-                Bar1
-                Bar3 
+		type Bar3:
+			bar2 Bar2(0..1)
+			condition Choice: one-of 
 
-            type Bar3:
-                bar2 Bar2(0..1)
-                condition Choice: one-of 
+		choice Foo:
+			Bar1
+			Bar3 
 
-            type Deep1:
-                attr int (1..1)
-
+		type Deep1:
+			attr int (1..1)
         '''.generatePython
 
-        println('testDeepPath ... python code')
-        println(pythonCode)
 /*		val classes = code.compileToClasses
         println ('***** function generator test dan 2 - Check1')
         val Check1 = classes.createFunc("Check1")
@@ -83,7 +78,7 @@ class ChoiceAliasGeneratorTest {
         })
         println ('***** function generator test dan 2 - Check1 assert -1')
         assertEquals(-1, Check1.invokeFunc(Integer, #[fooBar3]))*/
-        println ('***** testDeepPath - done')
+        println ('***** testChoiceAliasGenerator - done')
     }
     def generatePython(CharSequence model) {
         val m = model.parseRosettaWithNoErrors
