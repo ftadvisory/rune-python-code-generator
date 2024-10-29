@@ -37,8 +37,8 @@ __all__ = ['if_cond', 'if_cond_fn', 'Multiprop', 'rosetta_condition',
            'solve_metadata_key', 'solve_metalocation',
            'calculation_func','qualification_func',
            'scheme','check_one_of']
-
-
+           
+           
 def if_cond(ifexpr, thenexpr: str, elseexpr: str, obj: object):
     '''A helper to return the value of the ternary operator.'''
     expr = thenexpr if ifexpr else elseexpr
@@ -84,9 +84,10 @@ def _resolve_rosetta_attr(obj: Any | None,
         obj = obj.value
     if inspect.isframe(obj):
         obj=getattr(obj,'f_locals')
-        if (isinstance(obj, dict)):
-            return obj[attrib]
+    if (isinstance(obj, dict)):
+        return obj[attrib]
     return getattr(obj, attrib, None)
+
 
 
 def rosetta_count(obj: Any | None) -> int:
@@ -610,7 +611,10 @@ def all_elements(lhs, op, rhs) -> bool:
     op1 = _to_list(lhs)
     op2 = _to_list(rhs)
 
-    return all(cmp(el1, el2) for el1 in op1 for el2 in op2)
+    for o1 in op1:
+        for o2 in op2:
+            if cmp(o1,o2): return True
+    return False
 
 
 def disjoint(op1, op2):
