@@ -112,7 +112,8 @@ public class PythonCodeGenerator extends AbstractExternalGenerator {
     public Map<String, ? extends CharSequence> afterAllGenerate(ResourceSet set,
                                                                 Collection<? extends RosettaModel> models, 
                                                                 String version) {
-        String cleanVersion = cleanVersion(version);
+        // prep to save the resulting generated python for saving to the file
+        String cleanVersion = cleanVersion(version); // get a python appropriate version #
         Map<String, CharSequence> result = new HashMap<>();
 
         List<String> workspaces = getWorkspaces(subfolders);
@@ -145,6 +146,8 @@ public class PythonCodeGenerator extends AbstractExternalGenerator {
     }
 
     private Map<String, String> generateWorkspaces(List<String> workspaces, String version) {
+        // generate the expected python structure - add __init__.py, version and py.typed
+
         Map<String, String> result = new HashMap<>();
 
         for (String workspace : workspaces) {
@@ -157,6 +160,7 @@ public class PythonCodeGenerator extends AbstractExternalGenerator {
     }
 
     public Map<String, String> generateInits(List<String> subfolders) {
+        // add __init__.py to all directories
         Map<String, String> result = new HashMap<>();
 
         for (String subfolder : subfolders) {

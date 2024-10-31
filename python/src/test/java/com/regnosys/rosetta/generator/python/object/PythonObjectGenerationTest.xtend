@@ -20,23 +20,19 @@ class PythonObjectGenerationTest {
 
     @Test
     def void testMultilineAttributeDefinition() {
-        val python = 
-        '''
-        type Foo:
+        val python = '''type Foo:
             attr int (1..1) 
                 <"This is a
-                multiline
-                definition">
+multiline
+definition">
         '''.generatePython
-        val expected =
-        '''class Foo(BaseDataClass):
-            attr: int = Field(..., description="This is a multiline definition")
-            """
-                This is a
-                multiline
-                definition
-            """
-        '''
+        val expected = '''class Foo(BaseDataClass):
+    attr: int = Field(..., description="This is a multiline definition")
+    """
+    This is a
+    multiline
+    definition
+    """'''
         assertTrue(python.get("src/com/rosetta/test/model/Foo.py").toString.contains(expected))
     }
     
