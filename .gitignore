@@ -22,3 +22,4 @@ python/.pydevproject
 json-schema/src/main/generated-sources/
 json-schema/src/test/generated-sources/
 .checkstyle
+python/run.txt
