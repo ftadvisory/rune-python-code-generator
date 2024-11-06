@@ -54,6 +54,11 @@ class ChoiceAliasGeneratorTest {
             Bar1
             Bar3 
 
+        type FooBar:
+            foo Foo (1..1)
+            condition Test: 
+               foo->>deep1->attr = 3
+
         type Deep1:
             attr int (1..1)
         '''.generatePython
@@ -85,7 +90,6 @@ class ChoiceAliasGeneratorTest {
         })
         println ('***** function generator test dan 2 - Check1 assert -1')
         assertEquals(-1, Check1.invokeFunc(Integer, #[fooBar3]))*/
-//        println ('***** testChoiceAliasGenerator - done')
     }
     def generatePython(CharSequence model) {
         val m = model.parseRosettaWithNoErrors

@@ -146,9 +146,6 @@ class PythonModelObjectGenerator {
                         val resolutionMethod = (deepReference !== null && deepReference.contains(deepFeature.name)) ? "rosetta_resolve_deep_attr" : "rosetta_resolve_attr"
 //                        aliasList.add(needDeepReference + attribute.name + '.' + deepFeature.name)
                         aliasList.add ('("' + attribute.name + '", ' + resolutionMethod + ')')
-                        println('----- PythonModelObjectGenerator::generateChoiceAliases t:' + t.toString)
-                        println('----- PythonModelObjectGenerator::generateChoiceAliases deepFeature:' + deepFeature.toString)
-
                     }
                 ]
                 // Return the populated list for this deepFeature
@@ -211,14 +208,6 @@ class PythonModelObjectGenerator {
     private def generateClass(Data rosettaClass) {
         val t = rosettaClass.buildRDataType // USAGE HERE!
         val choiceAliases = generateChoiceAliases (t)
-        if (choiceAliases !== null) {
-            println ('----- generateClass rosettaClass: ' + rosettaClass.toString)
-            for (attrib : rosettaClass.getAttributes () ) {
-            	val ra = attrib as AttributeImpl
-	            println ('----- generateClass rosettaClass: ' + rosettaClass.name + ' ra:' + ra.name + ' type: ' + ra.getTypeCall)
-            	
-            }       
-        }
         return '''
             class «rosettaClass.name»«IF rosettaClass.superType === null»«ENDIF»«IF rosettaClass.superType !== null»(«rosettaClass.superType.name»):«ELSE»(BaseDataClass):«ENDIF»
                 «IF choiceAliases !== null»
