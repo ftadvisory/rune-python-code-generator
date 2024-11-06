@@ -50,7 +50,7 @@ class PythonModelGeneratorUtil {
         from decimal import Decimal
         from pydantic import Field
         from rosetta.runtime.utils import (
-            BaseDataClass, rosetta_condition, rosetta_resolve_attr
+            BaseDataClass, rosetta_condition, rosetta_resolve_attr, rosetta_resolve_deep_attr
         )
         from rosetta.runtime.utils import *
         

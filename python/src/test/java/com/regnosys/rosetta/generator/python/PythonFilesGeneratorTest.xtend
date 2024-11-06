@@ -21,7 +21,6 @@ import org.eclipse.xtext.resource.XtextResourceSet
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.extensions.InjectionExtension
 import org.eclipse.xtext.testing.util.ParseHelper
-import static org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.^extension.ExtendWith
 import org.junit.jupiter.api.Disabled
@@ -136,7 +135,7 @@ class PythonFilesGeneratorTest {
         LOGGER.info ("generatePythonFromRosettaFiles ... done")
     } 
     
-    @Disabled("Generate CDM from Rosetta Files")
+//    @Disabled("Generate CDM from Rosetta Files")
     @Test
     def void generateCDMPythonFromRosetta () {
         // the process: get directory information from the POM, create Python from Rosetta definitions and write out results
