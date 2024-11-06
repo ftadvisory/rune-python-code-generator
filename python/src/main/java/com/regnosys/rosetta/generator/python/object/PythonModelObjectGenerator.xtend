@@ -35,22 +35,15 @@ class PythonModelObjectGenerator {
             var is_ref = false;
             var is_address = false;
             var is_meta = false;
-            var is_scheme= false;
-            var is_location=false;
             for (ExpandedAttribute meta : attribute.getMetas()) {
                 val mname = meta.getName();
                 if (mname == "reference") { 
                     is_ref = true;
                 } else if (mname == "address") {
                     is_address = true;
-                } else if (mname == "scheme"){
-                	is_scheme=true;
-                } else if (mname == "id") {
+                } else if (mname == "key" || mname == "id" || mname == "scheme" || mname == "location") {
                     is_meta = true;
-                }else if (mname == "location"){
-                	is_location=true;
-                }
-                else {
+                } else {
                     helper_class += "---" + mname + "---";
                 }
             }
@@ -63,13 +56,7 @@ class PythonModelObjectGenerator {
             if (is_ref) {
                 helper_class += "WithReference";
             }
-            if (is_scheme){
-            	helper_class += "WithScheme";
-            }
-            if (is_location){
-            	helper_class += "WithLocation";
-            }
-            if (is_meta || is_address || is_scheme) {
+            if (is_meta || is_address) {
                 helper_class += "[" + basicType + "]";
             }
 
@@ -90,7 +77,7 @@ class PythonModelObjectGenerator {
             val classes = type.generateClasses(namespace, version).replaceTabsWithSpaces
             result.put(PythonModelGeneratorUtil::toPyFileName(model.name, type.name), PythonModelGeneratorUtil::createImports(type.name) + classes)
         }
-		
+
         result;
     }
 
@@ -144,32 +131,17 @@ class PythonModelObjectGenerator {
 
         return imports.toSet.toList
     }
-    
-     private def boolean hasKeys(Data c){
-	 val attr = c.allExpandedAttributes.filter[enclosingType == c.name].filter [
-        (it.name !== "reference") && (it.name === "meta") && (it.name !== "scheme")
-    	]
-      for (a:attr){
-      	if (a.enclosingType === c.name){return true}
-      }
-      return false
-    }
-    
+
     private def generateClassDefinition(Data rosettaClass) {
         return '''
-			class «rosettaClass.name»«IF rosettaClass.superType === null»«ENDIF»«IF rosettaClass.superType !== null»(«rosettaClass.superType.name»):«ELSE»(BaseDataClass):«ENDIF»
-				«IF rosettaClass.definition !== null»
-				"""
-				«rosettaClass.definition»
-				"""
-            «ENDIF»
-				«generateAttributes(rosettaClass)»
-				«expressionGenerator.generateConditions(rosettaClass)»
-				«IF hasKeys(rosettaClass)»
-				@metadata_key
-				def validate_mkeys(__module__):
-					return solve_metadata_key(__module__)
-	        	«ENDIF»
+            class «rosettaClass.name»«IF rosettaClass.superType === null»«ENDIF»«IF rosettaClass.superType !== null»(«rosettaClass.superType.name»):«ELSE»(BaseDataClass):«ENDIF»
+                «IF rosettaClass.definition !== null»
+                    """
+                    «rosettaClass.definition»
+                    """
+                «ENDIF»
+                «generateAttributes(rosettaClass)»
+                «expressionGenerator.generateConditions(rosettaClass)»
         '''
     }
     
@@ -184,8 +156,6 @@ class PythonModelObjectGenerator {
 
     private def generateExpandedAttribute(Data c, ExpandedAttribute attribute) {
         var att = ""
-        var location= false
-        //var scheme=false
         if (attribute.sup > 1 || attribute.unbound) {
             att += "List[" + toPythonType(c, attribute) + "]"
         } else {
@@ -195,12 +165,7 @@ class PythonModelObjectGenerator {
                 att += toPythonType(c, attribute) // cardinality (1..1)
             }
         }
-		if (att.contains("WithLocation")) {
-			location= true
-		}
-		//if (att.contains("WithScheme")) {
-			//scheme= true
-		//}
+
         var field_default = 'None'
         if (attribute.inf == 1 && attribute.sup == 1)
             field_default = '...' // mandatory field -> cardinality (1..1)
@@ -213,28 +178,21 @@ class PythonModelObjectGenerator {
                                 (attribute.inf == 1 && attribute.sup == 1) ||
                                 (attribute.inf == 0 && attribute.unbound))
 
-		
+
         var sup_str         = (attribute.unbound) ? 'None' : attribute.sup.toString()
          val attrDesc        = (attribute.definition === null) ? '' : attribute.definition.replaceAll('\\s+', ' ')
         '''
-            «IF location === true»
-			@metadata_location
-			def «attrName»_solve(__module__):
-				return solve_metalocation(__module__)
-			«ENDIF»
-			
-			«attrName»: «att» = Field(«field_default», description="«attrDesc»")
-			
+            «attrName»: «att» = Field(«field_default», description="«attrDesc»")
             «IF attribute.definition !== null»
-			"""
-			«attribute.definition»
-			"""
+                """
+                «attribute.definition»
+                """
             «ENDIF»
             «IF need_card_check»
-			@rosetta_condition
-			def cardinality_«attrName»(self):
-				return check_cardinality(self.«attrName», «attribute.inf», «sup_str»)
-			
+                @rosetta_condition
+                def cardinality_«attrName»(self):
+                    return check_cardinality(self.«attrName», «attribute.inf», «sup_str»)
+                
             «ENDIF»
         '''
     }

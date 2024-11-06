@@ -143,7 +143,7 @@ class PythonExpressionGenerator {
         if (expression instanceof ChoiceOperation) {
             attributes = expression.attributes
             if (expression.necessity == Necessity.OPTIONAL) {
-                necessity = "necessity=false"
+                necessity = "necessity=False"
             }
         }
         '''    return self.check_one_of_constraint(«FOR a : attributes SEPARATOR ", "»'«a.name»'«ENDFOR», «necessity»)

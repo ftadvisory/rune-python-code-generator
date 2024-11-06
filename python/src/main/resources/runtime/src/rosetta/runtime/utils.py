@@ -13,8 +13,6 @@ __all__ = ['if_cond', 'if_cond_fn', 'Multiprop', 'rosetta_condition',
            'get_only_element', 'rosetta_filter',
            'all_elements', 'contains', 'disjoint', 'join',
            'rosetta_local_condition',
-           'metadata_key',
-           'metadata_location',
            'execute_local_conditions',
            'flatten_list',
            '_resolve_rosetta_attr',
@@ -34,7 +32,6 @@ __all__ = ['if_cond', 'if_cond_fn', 'Multiprop', 'rosetta_condition',
            'AttributeWithMetaWithAddressWithReference',
            'AttributeWithScheme',
            'AttributeWithMetaWithScheme',
-           'solve_metadata_key', 'solve_metalocation',
            'calculation_func','qualification_func',
            'scheme','check_one_of']
            
@@ -131,36 +128,7 @@ class Multiprop(list):
 
 
 _CONDITIONS_REGISTRY: defaultdict[str, dict[str, Any]] = defaultdict(dict)
-_METAKEYS_REGISTRY: defaultdict[str] = defaultdict(dict)
-_METALOCATION_REGISTRY: defaultdict[str] = defaultdict(dict)
-def metadata_location (rclass):
-    aname =rclass.__qualname__.split('.')[-1].split('_')[0]
-    cname= rclass.__qualname__.split('.')[0]
-    if (cname not in _METALOCATION_REGISTRY):
-        att=[]
 
-    else:
-        att= _METALOCATION_REGISTRY[cname]
-
-    att.append(aname)
-    _METALOCATION_REGISTRY[cname] = att
-
-    @wraps(rclass)
-    def wrapper(*args, **kwargs):
-        return rclass(*args, **kwargs)
-
-    return wrapper
-
-def metadata_key(rclass):
-    path_components = rclass.__qualname__.split('.')
-    rname= path_components[0]
-    _METAKEYS_REGISTRY[rname]= rname
-
-    @wraps(rclass)
-    def wrapper(*args, **kwargs):
-        return rclass(*args, **kwargs)
-
-    return wrapper
 
 def scheme(rclass):
     @wraps(rclass)
@@ -252,21 +220,9 @@ def _get_conditions(cls) -> list:
                 for k, v in _CONDITIONS_REGISTRY.get(fqcn, {}).items()]
     return res
 
-def _get_meta_registry()->dict:
-	return _METAKEYS_REGISTRY
-
-def _update_meta_registry(newKey, value):
-	_METAKEYS_REGISTRY[newKey]= value
-
-def _get_loc_registry()->dict:
-    return _METALOCATION_REGISTRY
-
-def _update_loc_registry(newKey, value):
-    _METALOCATION_REGISTRY[newKey]=value
 class MetaAddress(BaseModel):  # pylint: disable=missing-class-docstring
     scope: str
     value: str
-
 
 class BaseDataClass(BaseModel):
     ''' A base class for all cdm generated classes. It is derived from
@@ -313,22 +269,6 @@ class BaseDataClass(BaseModel):
                 raise validation_error
             return [validation_error]
         return []
-    def validate_meta(self):
-        '''This method updates the metadata dictionaries and validates the keys'''
-        mregistry= _get_meta_registry()
-        lregistry= _get_loc_registry()
-        for attr_name in self.__fields__.keys():
-            attr_value = getattr(self, attr_name)
-            if self.__class__.__name__ in mregistry:
-                solve_metadata_key(self)
-            if self.__class__.__name__ in lregistry:
-                solve_metalocation(self)
-            if isinstance(attr_value, BaseDataClass):
-                attr_value.validate_meta()
-            elif isinstance(attr_value, list):
-                for item in attr_value:
-                    if isinstance(item, BaseDataClass):
-                        item.validate_meta()
 
     def validate_conditions(self,
                             recursively: bool = True,
@@ -412,48 +352,7 @@ class BaseDataClass(BaseModel):
         attr.append(value)
 
 
-    def resolve_references(self):
-        """
-        Initiates the recursive resolution of references using the model's own data.
-        This function should be called after the model has been fully instantiated and populated with data.
-        """
-        self.validate_meta()
-        self._resolve_references_recursive(None, None)
-
-    def _resolve_references_recursive(self, parent, attr_name):
-        """
-        Recursively traverses the model's data structure to resolve references using the global dictionaries.
-        """
-        for attr in self.__fields__.keys():
-            attr_value = getattr(self, attr)
-            if isinstance(attr_value, AttributeWithAddress):
-                global_loc_dict = _get_loc_registry()
-                addressValue = attr_value.address.value
-                if addressValue in global_loc_dict:
-                    resolved_location = global_loc_dict[addressValue]
-                    setattr(self, attr, resolved_location)
-            elif isinstance(attr_value, BaseModel):
-                if hasattr(attr_value, '_resolve_references_recursive'):
-                    attr_value._resolve_references_recursive(self, attr)
-            elif isinstance(attr_value, list):
-                for item in attr_value:
-                    if isinstance(item, BaseModel):
-                        if hasattr(item, '_resolve_references_recursive'):
-                            item._resolve_references_recursive(self, attr)
-            elif attr == 'globalReference':
-                global_reference = getattr(self, attr)
-                global_key_dict= _get_meta_registry()
-                if global_reference in global_key_dict:
-                    resolved_reference = global_key_dict[global_reference]
-                    setattr(parent, attr_name, resolved_reference)
-            elif attr == 'externalReference':
-                external_reference = getattr(self, attr)
-                global_key_dict = _get_meta_registry()
-                if external_reference in global_key_dict:
-                    resolved_reference = global_key_dict[external_reference]
-                    setattr(parent, attr_name, resolved_reference)
-
-
+     
 def _validate_conditions_recursively(obj, raise_exc=True):
     '''Helper to execute conditions recursively on a model.'''
     if not obj:
@@ -580,41 +479,13 @@ _cmp = {
 }
 
 
-def solve_metadata_key(self):
-    '''Solves the metadata keys and updates the global dictionary'''
-    registry = _get_meta_registry()
-    if self.__class__.__name__ in registry:
-        if 'globalKey' in self.meta:
-            _update_meta_registry(self.meta['globalKey'], self)
-        if 'externalKey' in self.meta:
-            _update_meta_registry(self.meta['externalKey'],self)
-
-def solve_metalocation(self):
-    '''Solves the metadata locations and updates the global dictionary'''
-    registry = _get_loc_registry()
-    if self.__class__.__name__ in registry:
-        att = registry[self.__class__.__name__]
-        for a in att:
-            attributeToCheck = getattr(self, a)
-            if attributeToCheck is not None and attributeToCheck != []:
-                if type(attributeToCheck) is list:
-                    attributeToCheck = attributeToCheck[0]
-                if attributeToCheck is not None and hasattr(attributeToCheck, 'meta'):
-                    if attributeToCheck.meta is not None and 'location' in attributeToCheck.meta:
-                        newKey = attributeToCheck.meta['location']
-                        newKey = newKey[0]['value']
-                        _update_loc_registry(newKey, attributeToCheck)
 
 def all_elements(lhs, op, rhs) -> bool:
     '''Checks that two lists have the same elements'''
     cmp = _cmp[op]
     op1 = _to_list(lhs)
     op2 = _to_list(rhs)
-
-    for o1 in op1:
-        for o2 in op2:
-            if cmp(o1,o2): return True
-    return False
+    return all(cmp(el1, el2) for el1, el2 in zip(op1, op2)) if len(op1) == len(op2) else False
 
 
 def disjoint(op1, op2):
@@ -678,14 +549,7 @@ def get_only_element(collection):
 
 def flatten_list(nested_list):
     '''flattens the list of lists (no-recursively)'''
-    flattened_list = []
-    for sublist in nested_list:
-        try:
-            for item in sublist:
-                flattened_list.append(item)
-        except:
-            flattened_list.append(sublist)
-    return flattened_list
+    return [item for sublist in _to_list(nested_list) for item in _to_list(sublist)]
 
 
 def rosetta_filter(items, filter_func, item_name='item'):
@@ -700,8 +564,7 @@ def rosetta_filter(items, filter_func, item_name='item'):
         expression.
     :return: Filtered list.
     """
-    if items!=None:
-        return [item for item in items if filter_func(locals()[item_name])]
+    return [item for item in (items or []) if filter_func(locals()[item_name])]
 
 
 def set_rosetta_attr(obj: Any, path: str, value: Any) -> None:

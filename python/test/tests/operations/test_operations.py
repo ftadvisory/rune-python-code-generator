@@ -6,7 +6,7 @@ import pytest
 import datetime
 from cdm.base.datetime.DateList import DateList
 from rosetta.runtime.utils import all_elements, any_elements, rosetta_count, rosetta_filter, _resolve_rosetta_attr, \
-    flatten_list, join, set_rosetta_attr
+    flatten_list, join, rosetta_attr_exists
 from rosetta.runtime.utils import execute_local_conditions
 from rosetta.runtime.utils import ConditionViolationError
 
@@ -75,22 +75,20 @@ def test_sum_operation():
     self = T()
     res = sum(1 for ots in self.openTradeStates if ots is None)
     assert res==2
-def test_filteroperation():
+
+def test_filteroperation_currency():
     class T:
         def __init__(self):
-            self.partyRole1={'role':"Seller"}
-            self.partyRole2={'role':None}
-            self.partyRole3={'role':"Client"}
-            self.partyRole4={'role':'Asian'}
-            self.partyRoles=[self.partyRole1,self.partyRole2,self.partyRole3,self.partyRole4]
-            self.partyRoleEnum=["Seller","Client"]
+            self.unit1 ={'currency':"USD"}
+            self.quantity1={'unit':self.unit1}
+            self.unit2 = {'currency': None}
+            self.quantity2 = {'unit': self.unit2}
+            self.quantities=[self.quantity1,self.quantity2]
 
     self = T()
-    res = rosetta_filter(_resolve_rosetta_attr(self, "partyRoles"), lambda item: all_elements(
-        _resolve_rosetta_attr(item, "role"), "=",
-        _resolve_rosetta_attr(self,  "partyRoleEnum")))
-    print(res)
-    assert self.partyRole1 in res and self.partyRole3 in res
+    res = rosetta_filter(_resolve_rosetta_attr(self, "quantities"), lambda item: rosetta_attr_exists(_resolve_rosetta_attr(_resolve_rosetta_attr(item, "unit"), "currency")))
+
+    assert len(res)==1
 
 def test_distinct_operation():
     class T:
@@ -173,7 +171,6 @@ def test_join_operation():
 if __name__ == '__main__':
     test_binary_operations()
     test_max_min_operation()
-    test_filteroperation()
     test_join_operation()
     test_last_operation()
     test_sum_operation()
@@ -183,5 +180,6 @@ if __name__ == '__main__':
     test_distinct_operation()
     test_flatten_operation()
     test_reverse_operation()
+    test_filteroperation_currency()
     print('...passed')
 # EOF
