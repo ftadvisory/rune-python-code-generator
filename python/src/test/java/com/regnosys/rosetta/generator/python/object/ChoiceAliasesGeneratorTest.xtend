@@ -29,6 +29,11 @@ class ChoiceAliasGeneratorTest {
                 set result:
                     foo ->> deep1->attr 
 */
+/*
+        choice Foo:
+            Bar1
+            Bar3
+*/
         val pythonCode = 
         '''
         type Bar1:
@@ -50,9 +55,16 @@ class ChoiceAliasGeneratorTest {
             bar4 Bar4(0..1)
             condition Choice: one-of 
 
-        choice Foo:
-            Bar1
-            Bar3 
+        type Foo:
+            bar1 Bar1 (0..1)
+            bar3 Bar3 (0..1)
+            condition Choice: one-of
+            condition Test:
+               if bar1 exists then
+                   bar1->deep1->attr = 3
+               else if bar3 exists then
+                   bar3->>deep1->attr =3
+               else False 
 
         type FooBar:
             foo Foo (1..1)

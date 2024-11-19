@@ -1,5 +1,17 @@
 package com.regnosys.rosetta.generator.python;
 
+import com.google.inject.Inject;
+import com.regnosys.rosetta.generator.external.AbstractExternalGenerator;
+import com.regnosys.rosetta.generator.python.enums.PythonEnumGenerator;
+import com.regnosys.rosetta.generator.python.func.PythonFunctionGenerator;
+import com.regnosys.rosetta.generator.python.object.PythonModelObjectGenerator;
+import com.regnosys.rosetta.generator.python.util.PythonModelGeneratorUtil;
+import com.regnosys.rosetta.generator.python.util.Util;
+import com.regnosys.rosetta.rosetta.RosettaEnumeration;
+import com.regnosys.rosetta.rosetta.RosettaMetaType;
+import com.regnosys.rosetta.rosetta.RosettaModel;
+import com.regnosys.rosetta.rosetta.simple.Data;
+import com.regnosys.rosetta.rosetta.simple.Function;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -9,26 +21,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
-
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.google.inject.Inject;
-import com.regnosys.rosetta.generator.external.AbstractExternalGenerator;
-import com.regnosys.rosetta.rosetta.RosettaEnumeration;
-import com.regnosys.rosetta.rosetta.RosettaMetaType;
-import com.regnosys.rosetta.rosetta.RosettaModel;
-import com.regnosys.rosetta.rosetta.simple.Data;
-import com.regnosys.rosetta.rosetta.simple.Function;
-import com.regnosys.rosetta.generator.python.enums.PythonEnumGenerator;
-import com.regnosys.rosetta.generator.python.object.PythonModelObjectGenerator;
-import com.regnosys.rosetta.generator.python.func.PythonFunctionGenerator;
-import com.regnosys.rosetta.generator.python.util.PythonModelGeneratorUtil;
-import com.regnosys.rosetta.generator.python.util.Util;
 
 public class PythonCodeGenerator extends AbstractExternalGenerator {
-    private static final Logger LOGGER = LoggerFactory.getLogger(PythonCodeGenerator.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(PythonCodeGenerator.class);
 
     @Inject PythonModelObjectGenerator pojoGenerator;
     @Inject PythonFunctionGenerator funcGenerator;

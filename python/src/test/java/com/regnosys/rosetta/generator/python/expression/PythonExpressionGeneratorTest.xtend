@@ -58,8 +58,9 @@ class PythonExpressionGeneratorTest {
                 field1 string (0..1) <"Test string field 1">
                 condition OneOf: one-of
             '''.generatePython    
+
         val expected= '''class Test1(BaseDataClass):
-    _CHOICE_ALIAS_MAP ={"field1"=[]}
+    _CHOICE_ALIAS_MAP ={"field1":[]}
     """
     Test one-of condition.
     """
@@ -72,6 +73,8 @@ class PythonExpressionGeneratorTest {
     def condition_0_OneOf(self):
         item = self
         return self.check_one_of_constraint('field1', necessity=True)'''
+		println('----- PythonExpressionGeneratorTest.shouldGenerateOneOfCondition ... python\n' + python)
+		println('----- PythonExpressionGeneratorTest.shouldGenerateOneOfCondition ... expected\n' + expected)
         assertTrue(python.toString.contains(expected))
     }
     

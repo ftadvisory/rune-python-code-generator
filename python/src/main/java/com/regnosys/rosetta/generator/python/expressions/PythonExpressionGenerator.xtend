@@ -174,7 +174,7 @@ class PythonExpressionGenerator {
     def String generateExpression(RosettaExpression expr, int iflvl) {
         switch (expr) {
             RosettaDeepFeatureCall: {
-				return '''rosetta_resolve_deep_attr(self, "«expr.feature.name»")'''
+                return '''rosetta_resolve_deep_attr(self, "«expr.feature.name»")'''
             }
             RosettaConditionalExpression: {
                 val ifexpr = generateExpression(expr.getIf(), iflvl + 1)

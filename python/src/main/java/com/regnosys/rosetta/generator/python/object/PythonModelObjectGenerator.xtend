@@ -134,7 +134,7 @@ class PythonModelObjectGenerator {
                 choiceType.allNonOverridenAttributes.forEach [ attribute |
                     val attrType = attribute.RType
                     var t = attrType
-        
+
                     // Convert RChoiceType to RDataType if applicable
                     if (t instanceof RChoiceType) {
                         t = t.asRDataType
@@ -205,13 +205,19 @@ class PythonModelObjectGenerator {
         return imports.toSet.toList
     }
 
+    private def generateChoiceMapStrings (Map<String, ArrayList<String>> choiceAliases) {
+        var result = (choiceAliases === null) ? '' : choiceAliases.entrySet.map[e | e.key + ":" + e.value.toString].join(",")
+        println('generateChoiceMapStrings ... ' + result)
+        return result
+    }
+
     private def generateClass(Data rosettaClass) {
         val t = rosettaClass.buildRDataType // USAGE HERE!
         val choiceAliases = generateChoiceAliases (t)
         return '''
             class «rosettaClass.name»«IF rosettaClass.superType === null»«ENDIF»«IF rosettaClass.superType !== null»(«rosettaClass.superType.name»):«ELSE»(BaseDataClass):«ENDIF»
                 «IF choiceAliases !== null»
-                    _CHOICE_ALIAS_MAP =«choiceAliases»
+                    _CHOICE_ALIAS_MAP ={«generateChoiceMapStrings(choiceAliases)»}
                 «ENDIF»
                 «IF rosettaClass.definition !== null»
                     """
@@ -224,6 +230,7 @@ class PythonModelObjectGenerator {
     }
     
     private def generateAttributes(Data c) {
+        // Data --> RDataType --> getAllAttributes
         val attr = c.allExpandedAttributes.filter[enclosingType == c.name].filter [
             (it.name !== "reference") && (it.name !== "meta") && (it.name !== "scheme")
         ]
@@ -275,6 +282,8 @@ class PythonModelObjectGenerator {
         '''
     }
 
+    // expandedAttributes --> Data to RDataType (inject RObjectFactory use method called buildRDataType) --> getAllAttributes
+    // getOwnAttributes
     def Iterable<ExpandedAttribute> allExpandedAttributes(Data type) {
         type.allSuperTypes.map[it.expandedAttributes].flatten
     }

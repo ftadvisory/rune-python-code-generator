@@ -5,6 +5,7 @@ import com.regnosys.rosetta.generator.object.ExpandedType
 import com.regnosys.rosetta.rosetta.simple.Attribute
 import com.regnosys.rosetta.generator.object.ExpandedAttribute
 import java.util.Arrays
+// ExpandedType --> RDataType
 
 class PythonTranslator {
     static private def String toPythonBasicTypeInnerFunction (String rosettaType) {
@@ -89,6 +90,7 @@ class PythonTranslator {
             return null
         var pythonType = toPythonBasicTypeInnerFunction (rosettaExpandedType.name)
         if (pythonType === null)
+            // rosettaExpandedType.enumeration --> instanceof REnumType
             pythonType = (rosettaExpandedType.enumeration) ? 
                          '''«rosettaExpandedType.name.toFirstUpper»''' :  
                          rosettaExpandedType.name.toFirstUpper

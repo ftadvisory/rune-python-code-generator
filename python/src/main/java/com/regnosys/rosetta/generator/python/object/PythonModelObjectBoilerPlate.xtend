@@ -4,7 +4,7 @@ import com.regnosys.rosetta.generator.object.ExpandedAttribute
 
 import static extension com.regnosys.rosetta.generator.python.util.PythonTranslator.toPythonType
 import com.regnosys.rosetta.generator.object.ExpandedType
-
+// ExpandedType --> RType
 class PythonModelObjectBoilerPlate {
 
     def toAttributeName(ExpandedAttribute attribute) {
