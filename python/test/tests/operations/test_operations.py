@@ -1,20 +1,8 @@
 '''Tests of the local registration of conditions'''
-import inspect
-from sqlite3 import Date
 
-import pytest
 import datetime
-from cdm.base.datetime.DateList import DateList
 from rosetta.runtime.utils import all_elements, any_elements, rosetta_count, rosetta_filter, _resolve_rosetta_attr, \
     flatten_list, join, rosetta_attr_exists
-from rosetta.runtime.utils import execute_local_conditions
-from rosetta.runtime.utils import ConditionViolationError
-
-from target.python.src.cdm.event.common.Reset import Reset
-from target.python.src.cdm.event.common.SettlementOrigin import SettlementOrigin
-from target.python.src.cdm.event.common.TradeState import TradeState
-from target.python.src.cdm.event.common.functions.InterestCashSettlementAmount import InterestCashSettlementAmount
-from target.python.src.cdm.product.asset.InterestRatePayout import InterestRatePayout
 
 
 def test_binary_operations():
