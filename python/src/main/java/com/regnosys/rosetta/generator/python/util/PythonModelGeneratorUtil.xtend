@@ -1,6 +1,7 @@
 package com.regnosys.rosetta.generator.python.util
 
-import com.regnosys.rosetta.generator.object.ExpandedAttribute
+import com.regnosys.rosetta.types.RAttribute
+
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -22,7 +23,7 @@ class PythonModelGeneratorUtil {
         «ENDIF»
         '''
 
-    static def classComment(String definition, Iterable<ExpandedAttribute> attributes) 
+    static def classComment(String definition, Iterable<RAttribute> attributes) {
         '''
         «IF definition !==null && !definition.isEmpty »
         #
@@ -34,7 +35,7 @@ class PythonModelGeneratorUtil {
         #
         «ENDIF»
         '''
-        
+    }
     static def String createImports(String name){			
         val imports=
         '''

@@ -22,13 +22,12 @@ class ModelObjectGeneratorTest {
 
 
     @Test
-    def void generateStringBasicType() {
+    def void testGenerateBasicTypeString() {
         val python = '''
             type Tester:
                 one string (0..1)
                 list string (0..*)
         '''.generatePython
-
         
         val expected=
         '''
@@ -42,7 +41,7 @@ class ModelObjectGeneratorTest {
     }
 
     @Test
-    def void generateIntBasicType() {
+    def void testGenerateBasicTypeInt() {
         val python = '''
             type Tester:
                 one int (0..1)
@@ -62,14 +61,12 @@ class ModelObjectGeneratorTest {
     }
 
     @Test
-    def void generateNumberBasicType() {
+    def void testGenerateBasicTypeNumber() {
         val python = '''
             type Tester:
                 one number (0..1)
                 list number (0..*)
         '''.generatePython
-
-        
         
         val expected=
         '''
@@ -84,7 +81,7 @@ class ModelObjectGeneratorTest {
     }
 
     @Test
-    def void generateBooleanBasicType() {
+    def void testGenerateBasicTypeBoolean() {
         val python = '''
             type Tester:
                 one boolean (0..1)
@@ -104,7 +101,7 @@ class ModelObjectGeneratorTest {
     }
 
     @Test
-    def void generateDateBasicType() {
+    def void testGenerateBasicTypeDate() {
         val python = '''
             type Tester:
                 one date (0..1)
@@ -125,7 +122,7 @@ class ModelObjectGeneratorTest {
     }
 
     @Test
-    def void generateDateTimeBasicType() {
+    def void testGenerateBasicTypeDateTime() {
         val python = '''
             type Tester:
                 one date (0..1)
@@ -145,7 +142,7 @@ class ModelObjectGeneratorTest {
     }
 
     @Test
-    def void generateTimeBasicType() {
+    def void testGenerateBasicTypeTime() {
         val python = '''
             type Tester:
                 one time (0..1)
@@ -167,7 +164,7 @@ class ModelObjectGeneratorTest {
 
     @Test
     @Disabled
-    def void shouldGenerateMetadFieldWhenAttributeSchemePresent() {
+    def void testGenerateMetaFieldWhenAttributeSchemePresent() {
         '''
             type TestObject: <"">
                 fieldOne string (0..1) [metadata scheme]
@@ -178,7 +175,7 @@ class ModelObjectGeneratorTest {
 
     @Test
     @Disabled
-    def void shouldGenerateRosettaReferenceField() {
+    def void testGenerateRosettaReferenceField() {
         '''
             type TestObject: <"">
                 fieldOne Test2 (0..1) [metadata reference]
@@ -191,7 +188,7 @@ class ModelObjectGeneratorTest {
 
     @Test
     @Disabled
-    def void shouldGenerateBasicReferenceField() {
+    def void testGenerateBasicReferenceField() {
         val namespace = 'test.ns.basicref'
         '''
             namespace "«namespace»"
@@ -208,7 +205,7 @@ class ModelObjectGeneratorTest {
 
     @Test
     @Disabled
-    def void shouldCreateFieldWithReferenceTypeWhenAttributeIsReference() {
+    def void testCreateFieldWithReferenceTypeWhenAttributeIsReference() {
         '''
 
             type ComplexObject:
@@ -222,7 +219,7 @@ class ModelObjectGeneratorTest {
 
     @Test
     @Disabled
-    def void shouldGenerateTypeWithMetaFieldImport() {
+    def void testGenerateTypeWithMetaFieldImport() {
         val namespace = 'test.ns.metafield'
         '''
             namespace "«namespace»"
@@ -242,7 +239,7 @@ class ModelObjectGeneratorTest {
 
     @Test
     @Disabled
-    def void shouldImplementGlobalKeyWhenDefined() {
+    def void testImplementGlobalKeyWhenDefined() {
         '''
             type WithGlobalKey:
                 [metadata key]
@@ -253,13 +250,11 @@ class ModelObjectGeneratorTest {
     }
 
     @Test
-    def void shouldOmmitGlobalKeyAnnotationWhenNotDefined() {
+    def void testOmitGlobalKeyAnnotationWhenNotDefined() {
         val python = '''
             type AttributeGlobalKeyTest:
                 withoutGlobalKey string (1..1)
         '''.generatePython
-
-        
         
         val expected=
         '''
@@ -273,7 +268,7 @@ class ModelObjectGeneratorTest {
 
     @Test
     @Disabled
-    def void shouldGenerateReferenceAttributeAsReference() {
+    def void testGenerateReferenceAttributeAsReference() {
         '''
             type Foo:
                 [metadata key]
@@ -344,7 +339,7 @@ class ModelObjectGeneratorTest {
     }
 
     @Test
-    def void shouldExtendATypeWithSameAttribute() {
+    def void testExtendATypeWithSameAttribute() {
         val python = '''
             type Foo:
                 a string (0..1)
@@ -374,7 +369,7 @@ class ModelObjectGeneratorTest {
     }
 
     @Test
-    def shouldGenerateRosettaCalculationTypeAsString() {
+    def testGenerateRosettaCalculationTypeAsString() {
         val python = '''
             type Foo:
                 bar calculation (0..1)
@@ -392,7 +387,7 @@ class ModelObjectGeneratorTest {
     }
 
     @Test
-    def void shouldSetAttributesOnEmptyClassWithInheritance() {
+    def void testSetAttributesOnEmptyClassWithInheritance() {
         val python = '''
             type Foo:
                 attr string (0..1)
@@ -521,7 +516,7 @@ class ModelObjectGeneratorTest {
     
     
     @Test
-    def void shouldGenerateTypes() {
+    def void testGenerateTypes() {
         val python = '''
         type TestType: <"Test type description.">
             testTypeValue1 string (1..1) <"Test string">
@@ -585,14 +580,10 @@ class ModelObjectGeneratorTest {
     """'''
         assertTrue(python.toString.contains(expectedTestType))
         assertTrue(python.toString.contains(expectedTestType2))
-           
     }        
-
-    
-    
     
     @Test
-    def void shouldGenerateTypesMethod2() {
+    def void testGenerateTypesMethod2() {
         val python = '''
         type UnitType: <"Defines the unit to be used for price, quantity, or other purposes">
             currency string (0..1) <"Defines the currency to be used as a unit for a price, quantity, or other purpose.">
@@ -649,7 +640,7 @@ class ModelObjectGeneratorTest {
     }
 
     @Test
-    def void shouldGenerateTypesExtends() {
+    def void testGenerateTypesExtends() {
         val python = '''
         type TestType extends TestType2:
             TestTypeValue1 string (1..1) <"Test string">
@@ -701,7 +692,7 @@ class ModelObjectGeneratorTest {
     }
 
     @Test
-    def void shouldGenerateTypesChoiceCondition() {
+    def void testGenerateTypesChoiceCondition() {
         val python = '''type TestType: <"Test type with one-of condition.">
             field1 string (0..1) <"Test string field 1">
             field2 string (0..1) <"Test string field 2">
@@ -745,7 +736,7 @@ class ModelObjectGeneratorTest {
     }
 
     @Test
-    def void shouldGenerateIfThenCondition() {
+    def void testGenerateIfThenCondition() {
         val python = '''type TestType: <"Test type with one-of condition.">
             field1 string (0..1) <"Test string field 1">
             field2 string (0..1) <"Test string field 2">

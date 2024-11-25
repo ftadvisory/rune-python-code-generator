@@ -40,10 +40,8 @@ class PythonFilesGeneratorTest {
     @Inject PythonCodeGenerator generator
 
     @Inject extension ParseHelper<RosettaModel>
-    @Inject extension ModelHelper
     
-    @Inject
-    Provider<XtextResourceSet> resourceSetProvider;
+    @Inject Provider<XtextResourceSet> resourceSetProvider;
 
     def private Properties getProperties () throws Exception {
         var reader     = new MavenXpp3Reader();

@@ -1,5 +1,6 @@
 '''deep path unit tests'''
 import pytest
+
 from rosetta_dsl.test.semantic.deep_path.Deep1 import Deep1
 from rosetta_dsl.test.semantic.deep_path.Bar1 import Bar1
 from rosetta_dsl.test.semantic.deep_path.Bar2 import Bar2

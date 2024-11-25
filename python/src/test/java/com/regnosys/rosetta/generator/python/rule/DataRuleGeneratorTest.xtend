@@ -427,28 +427,25 @@ class DataRuleGeneratorTest {
 
     @Test
     def void conditionCount() {
-        val python = '''
-            type CondTest:
-                multiAttr number (0..*)
-
-                condition:
-                    multiAttr count >= 0
-        '''.generatePython
-
+		val python = '''
+		    type CondTest:
+		        multiAttr number (0..*)
+		
+		        condition:
+		            multiAttr count >= 0
+		'''.generatePython
         
-        val expected=
-        '''
-        class CondTest(BaseDataClass):
-            multiAttr: List[Decimal] = Field([], description="")
-            
-            @rosetta_condition
-            def condition_0_(self):
-                item = self
-                return all_elements(rosetta_count(rosetta_resolve_attr(self, "multiAttr")), ">=", 0)
-        '''
-
-
-        assertTrue(python.toString.contains(expected))
+		val expected=
+    '''
+    class CondTest(BaseDataClass):
+        multiAttr: List[Decimal] = Field([], description="")
+        
+        @rosetta_condition
+        def condition_0_(self):
+            item = self
+            return all_elements(rosetta_count(rosetta_resolve_attr(self, "multiAttr")), ">=", 0)
+    '''
+	    assertTrue(python.toString.contains(expected))
     }
 
     @Test
