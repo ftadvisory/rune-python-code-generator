@@ -27,7 +27,7 @@ class PythonMetaFieldGenerator {
     @Inject extension RObjectFactory
 
     def generateMetaFields(List<Data> rosettaClasses, Iterable<RosettaMetaType> metaTypes, String version) {
-    	println('----- generateMetaFields #### HERE')
+        println('----- generateMetaFields #### HERE')
 /*
  * 
          val metaFieldsImports = generateMetaFieldsImports.toString
@@ -60,8 +60,8 @@ class PythonMetaFieldGenerator {
         val metaFields = genMetaFields(metaTypes.filter[t|t.name!="id" && t.name!="key" && t.name!="reference" && t.name!="address"], version)
 
         return PythonModelGeneratorUtil::fileComment(version) + metaFieldsImports + referenceWithMeta + metaFields
- 	*/   
- 	}
+     */   
+     }
 
     private def generateMetaFieldsImports() 
     '''
@@ -83,7 +83,7 @@ class PythonMetaFieldGenerator {
     '''
  */
     private def generateAttribute(RType rt) {
-		return (rt instanceof REnumType) ? '''value = «rt.toPythonType»''' : '''value = None'''
+        return (rt instanceof REnumType) ? '''value = «rt.toPythonType»''' : '''value = None'''
     }
 /*
     private def generateAttribute(ExpandedType type) {
@@ -135,7 +135,7 @@ class PythonMetaFieldGenerator {
         address = Reference()
 
     '''
- 	*/
+     */
 
     private def genMetaFields(Iterable<RosettaMetaType> types, String version) 
     '''

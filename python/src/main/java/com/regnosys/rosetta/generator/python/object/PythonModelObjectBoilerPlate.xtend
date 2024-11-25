@@ -8,7 +8,7 @@ import static extension com.regnosys.rosetta.generator.python.util.PythonTransla
 class PythonModelObjectBoilerPlate {
 
     def toAttributeName(RAttribute attribute) {
-		return (attribute.name == "val") ? '''`val`''' : attribute.name.toFirstLower
+        return (attribute.name == "val") ? '''`val`''' : attribute.name.toFirstLower
     }
 
     def replaceTabsWithSpaces(CharSequence code) {
@@ -19,7 +19,7 @@ class PythonModelObjectBoilerPlate {
         '''«type.name»'''
     }
     def toType(RAttribute ra) {
-		return (ra.isMulti) ? '''MutableList<«ra.toRawType»>''' : '''«ra.toRawType»'''
+        return (ra.isMulti) ? '''MutableList<«ra.toRawType»>''' : '''«ra.toRawType»'''
     }
     def toRawType(RAttribute ra) {
         ra.getRType.toPythonType

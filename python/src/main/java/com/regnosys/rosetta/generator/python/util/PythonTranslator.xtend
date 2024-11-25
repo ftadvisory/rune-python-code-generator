@@ -87,22 +87,22 @@ class PythonTranslator {
     }
     static def String toPythonType(RType rt) {
         if (rt === null)
-        	return null
+            return null
         var pythonType = toPythonBasicTypeInnerFunction (rt.name)
         if (pythonType === null)
             // rosettaExpandedType.enumeration --> instanceof REnumType
             pythonType = (rt instanceof REnumType) ? '''«rt.name.toFirstUpper»''' : rt.name.toFirstUpper
         return pythonType
     }
-	static def String toPythonType (RAttribute ra) {
+    static def String toPythonType (RAttribute ra) {
         val rt     = (ra === null) ? null : ra.getRType
         val rtName = (rt === null) ? null : rt.getName 
         if (rtName === null) 
-        	return null
+            return null
         val pythonType = toPythonBasicTypeInnerFunction (rtName);
         return (pythonType === null) ? rt.getNamespace + '.' + rtName + '.' + rtName : pythonType
-	}
-	static def String toPythonType(Attribute rosettaAttributeType) {
+    }
+    static def String toPythonType(Attribute rosettaAttributeType) {
         if (rosettaAttributeType === null)
             return null;
         val rosettaType = rosettaAttributeType.getTypeCall.type.name

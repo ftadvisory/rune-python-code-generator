@@ -530,7 +530,7 @@ class PythonExpressionGeneratorTest {
                     
             type Test: <"Test distinct operation condition">
             aValue A (1..*) <"Test A type aValue">
-                field3 number (1..1)<"Test number field 3">	
+                field3 number (1..1)<"Test number field 3">
             condition TestCond: <"Test condition">
                 if aValue -> field1 distinct count = 1
                     then field3=0

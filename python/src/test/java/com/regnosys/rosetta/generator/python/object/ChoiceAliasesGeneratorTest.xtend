@@ -75,7 +75,7 @@ class ChoiceAliasGeneratorTest {
             attr int (1..1)
         '''.generatePython
 
-        /*		
+        /*
         val classes = code.compileToClasses
         println ('***** function generator test dan 2 - Check1')
         val Check1 = classes.createFunc("Check1")

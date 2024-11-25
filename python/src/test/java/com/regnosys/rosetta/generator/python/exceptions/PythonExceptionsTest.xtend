@@ -33,7 +33,7 @@ class PythonExceptionsTest {
                 aValue A (1..1)
             '''.generatePython
         }catch(Exception ex){
-            assertTrue(ex.getMessage.contains("Attribute type is null"));     	
+            assertTrue(ex.getMessage.contains("Attribute type is null"));
         }
     }
     

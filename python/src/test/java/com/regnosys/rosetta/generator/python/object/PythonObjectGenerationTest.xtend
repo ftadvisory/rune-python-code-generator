@@ -333,7 +333,7 @@ definition">
         """
         item = self
         return self.check_one_of_constraint('capacityUnit', 'weatherUnit', 'financialUnit', 'currency', necessity=True)
-	'''
+    '''
         val expectedTestType3='''class WeatherUnitEnum(Enum):
     """
     Provides enumerated values for weather units, generally used in the context of defining quantities for commodities.
@@ -828,7 +828,7 @@ definition">
     """
     Test int
     """
-  	'''
+      '''
         val expectedTestType2='''class TestType2(TestType3):
     TestType2Value1: Optional[Decimal] = Field(None, description="Test number")
     """

@@ -32,7 +32,7 @@ class PythonModelObjectGenerator {
         if (basicType === null) {
             throw new Exception("Attribute type is null for " + ra.name + " for class " + c.name)
         }
-		
+        
         if (ra.getMetaAnnotations.size > 0) {
             var helperClass = "Attribute";
             var hasRef      = false;
@@ -63,7 +63,7 @@ class PythonModelObjectGenerator {
                 helperClass += "[" + basicType + "]";
             }
             basicType = helperClass + " | " + basicType;
-			println('----- PythonModelObjectGenerator::toPythonType ... helperClass:' + helperClass + ' basicType:' + basicType)
+            println('----- PythonModelObjectGenerator::toPythonType ... helperClass:' + helperClass + ' basicType:' + basicType)
         }
         return basicType
     }
@@ -79,7 +79,7 @@ class PythonModelObjectGenerator {
             val namespace  = Util::getNamespace (model)
             val pythonBody = type.generateBody(namespace, version).replaceTabsWithSpaces
             result.put(
-            	PythonModelGeneratorUtil::toPyFileName(model.name, type.name), 
+                PythonModelGeneratorUtil::toPyFileName(model.name, type.name), 
                 PythonModelGeneratorUtil::createImports(type.name) + pythonBody
             )
         }
@@ -174,16 +174,16 @@ class PythonModelObjectGenerator {
     }
 
     private def getImportsFromAttributes(Data rosettaClass) {
-	    // expandedAttributes --> Data to RDataType (inject RObjectFactory use method called buildRDataType) --> getAllAttributes
-	    // getOwnAttributes
-	    val rdt = rosettaClass.buildRDataType
+        // expandedAttributes --> Data to RDataType (inject RObjectFactory use method called buildRDataType) --> getAllAttributes
+        // getOwnAttributes
+        val rdt = rosettaClass.buildRDataType
         val filteredAttributes = rdt.getOwnAttributes.filter [(it.name !== "reference") && (it.name !== "meta") && (it.name !== "scheme")].filter[!checkBasicType(it)]
 
         val imports = newArrayList
         for (attribute : filteredAttributes) {
-        	if (attribute.getRType === null) {
-	            throw new Exception("Attribute type is null for " + attribute.name + " for class " + rosettaClass.name)
-        	}
+            if (attribute.getRType === null) {
+                throw new Exception("Attribute type is null for " + attribute.name + " for class " + rosettaClass.name)
+            }
             val modelName = attribute.getRType.getQualifiedName
             if (modelName !== null) {
                 imports.add('''import «modelName»''')
@@ -217,8 +217,8 @@ class PythonModelObjectGenerator {
     }
 
     private def generateAttributes(Data rosettaClass) {
-    	// get the aattributes for this class	
-		val attr           = rosettaClass.buildRDataType.getOwnAttributes
+        // get the aattributes for this class
+        val attr           = rosettaClass.buildRDataType.getOwnAttributes
         val attrSize       = attr.size()
         val conditionsSize = rosettaClass.conditions.size()
         '''«IF attrSize === 0 && conditionsSize===0»pass«ELSE»«FOR attribute : attr SEPARATOR ""»«createPythonFromAttribute(rosettaClass, attribute)»«ENDFOR»«ENDIF»'''
@@ -234,11 +234,11 @@ class PythonModelObjectGenerator {
         var upperCardString  = (ra.cardinality.isUnboundedRight) ? "None" : ra.cardinality.getMax.get.toString
         var fieldDefault      = (upperCardinality == 1 && lowerCardinality == 1) ? '...' : 'None' // mandatory field -> cardinality (1..1)
         if (ra.cardinality.isUnboundedRight || upperCardinality > 1) {
-			// a list if the upper cardinality is unbounded or gt 1 
+            // a list if the upper cardinality is unbounded or gt 1 
             attString       += "List[" + toPythonType(c, ra) + "]"
             fieldDefault  = '[]'
         } else if (lowerCardinality == 0) { // edge case (0..0) will come here
-    		// optional if lower cardin
+            // optional if lower cardin
             attString += "Optional[" + toPythonType(c, ra) + "]"
         } else {
             attString += toPythonType(c, ra) // cardinality (1..1)
