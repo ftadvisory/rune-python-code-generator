@@ -20,7 +20,7 @@ class PythonExpressionGeneratorTest {
     @Inject PythonCodeGenerator generator;
     
     @Test
-    def void shouldGenerateChoiceCondition() {
+    def void testGenerateChoiceCondition() {
         val python = '''type Test1:<"Test choice condition.">
             field1 string (0..1) <"Test string field 1">
             field2 string (0..1) <"Test string field 2">
@@ -53,7 +53,7 @@ class PythonExpressionGeneratorTest {
     }
     
     @Test
-    def void shouldGenerateOneOfCondition() {
+    def void testGenerateOneOfCondition() {
         val python = '''type Test1:<"Test one-of condition.">
                 field1 string (0..1) <"Test string field 1">
                 condition OneOf: one-of
@@ -73,13 +73,11 @@ class PythonExpressionGeneratorTest {
     def condition_0_OneOf(self):
         item = self
         return self.check_one_of_constraint('field1', necessity=True)'''
-		println('----- PythonExpressionGeneratorTest.shouldGenerateOneOfCondition ... python\n' + python)
-		println('----- PythonExpressionGeneratorTest.shouldGenerateOneOfCondition ... expected\n' + expected)
         assertTrue(python.toString.contains(expected))
     }
     
     @Test
-    def void shouldGenerateIfThenCondition() {
+    def void testGenerateIfThenCondition() {
         val python = '''type Test1: <"Test if-then condition.">
                 field1 string (0..1) <"Test string field 1">
                 field2 number (0..1) <"Test number field 2">
@@ -119,7 +117,7 @@ class PythonExpressionGeneratorTest {
     }
     
     @Test
-    def void shouldGenerateIfThenElseCondition() {
+    def void testGenerateIfThenElseCondition() {
         val python = '''type Test1: <"Test if-then-else condition.">
             field1 string (0..1) <"Test string field 1">
             field2 number (0..1) <"Test number field 2">
@@ -159,7 +157,7 @@ class PythonExpressionGeneratorTest {
     }
     
     @Test
-    def void shouldGenerateBooleanCondition(){
+    def void testGenerateBooleanCondition(){
         val python = '''type Test1: <"Test boolean condition.">
             field1 boolean (1..1) <"Test booelan field 1">
             field2 number (0..1) <"Test number field 2">
@@ -198,7 +196,7 @@ class PythonExpressionGeneratorTest {
     }
     
     @Test
-    def void shouldGenerateAbsentCondition(){
+    def void testGenerateAbsentCondition(){
         val python = '''type Test1: <"Test absent condition.">
             field1 boolean (1..1) <"Test booelan field 1">
             field2 number (0..1) <"Test number field 2">
@@ -238,7 +236,7 @@ class PythonExpressionGeneratorTest {
     }
     
     @Test
-    def void shouldGenerateOnlyElementCondition(){
+    def void testGenerateOnlyElementCondition(){
         val python = '''enum TestEnum: <"Enum to test">
             TestEnumValue1 <"Test enum value 1">
             TestEnumValue2 <"Test enum value 2">
@@ -293,7 +291,7 @@ class PythonExpressionGeneratorTest {
     }
     
     @Test
-    def void shouldGenerateNumberLiteralCondition(){
+    def void testGenerateNumberLiteralCondition(){
         val python = '''type Test1: <"Test rosetta number literal  condition.">
             field1 number (0..1) <"Test number field 1">
             
@@ -321,7 +319,7 @@ class PythonExpressionGeneratorTest {
                     
     }
     @Test
-    def void shouldGenerateintLiteralCondition(){
+    def void testGenerateintLiteralCondition(){
         val python = '''type Test1: <"Test rosetta int literal  condition.">
             field1 int (0..1) <"Test int field 1">
             
@@ -350,7 +348,7 @@ class PythonExpressionGeneratorTest {
     }
     
     @Test
-    def void shouldGenerateStringLiteralCondition(){
+    def void testGenerateStringLiteralCondition(){
         val python = '''type Test1: <"Test rosetta string literal  condition.">
             field1 string (0..1) <"Test string field 1">
             
@@ -379,7 +377,7 @@ class PythonExpressionGeneratorTest {
     }
     
      @Test
-    def void shouldGenerateOnlyExistsCondition(){
+    def void testGenerateOnlyExistsCondition(){
         val python = '''type A: <"Test type">
             field1 number (0..1) <"Test number field 1">
 
@@ -427,7 +425,7 @@ class PythonExpressionGeneratorTest {
     }
     
     @Test
-    def void shouldGenerateCountCondition(){
+    def void testGenerateCountCondition(){
         val python = '''type A: <"Test type">
             field1 int (0..*) <"Test int field 1">
             field2 int (0..*) <"Test int field 2">
@@ -485,7 +483,7 @@ class PythonExpressionGeneratorTest {
     }
     
     @Test
-    def void shouldGenerateAnyCondition(){
+    def void testGenerateAnyCondition(){
         val python = '''type Test: <"Test any operation condition">
                 field1 string (1..1) <"Test string field1">
                 field2 string (1..1) <"Test boolean field2">
@@ -525,14 +523,14 @@ class PythonExpressionGeneratorTest {
     }
     
     @Test
-    def void shouldGenerateDistinctCondition(){
+    def void testGenerateDistinctCondition(){
         val python = '''type A: <"Test type">
             field1 int (0..*) <"Test int field 1">
             field2 int (0..*) <"Test int field 2">
                     
             type Test: <"Test distinct operation condition">
             aValue A (1..*) <"Test A type aValue">
-                field3 number (1..1)<"Test number field 3">	
+                field3 number (1..1)<"Test number field 3">
             condition TestCond: <"Test condition">
                 if aValue -> field1 distinct count = 1
                     then field3=0
@@ -590,7 +588,7 @@ class PythonExpressionGeneratorTest {
     }
     
     @Test
-    def void shouldGenerateSortCondition(){
+    def void testGenerateSortCondition(){
         val python = '''type A: <"Test type">
             field1 int (0..1) <"Test int field 1">
                 field2 int (0..1) <"Test int field 2">
@@ -641,7 +639,7 @@ class PythonExpressionGeneratorTest {
     }
     
     @Test
-    def void shouldGenerateLastCondition(){
+    def void testGenerateLastCondition(){
         val python = '''type A: <"Test type">
             field1 int (0..*) <"Test int field 1">
                 field2 int (0..1) <"Test int field 2">
@@ -691,7 +689,7 @@ class PythonExpressionGeneratorTest {
     }
     
     @Test
-    def void shouldGenerateSumCondition(){
+    def void testGenerateSumCondition(){
         val python = '''
             type A: <"Test type">
             field1 int (0..*) <"Test int field 1">
@@ -742,7 +740,7 @@ class PythonExpressionGeneratorTest {
     }
     
     @Test
-    def void shouldGenerateFilterCondition(){
+    def void testGenerateFilterCondition(){
         val python = '''type A: <"Test type">
             field1 boolean (1..1) <"Test int field 1">
                 field2 int (0..*) <"Test int field 2">
@@ -788,7 +786,7 @@ class PythonExpressionGeneratorTest {
     
     
     @Ignore
-    def void shouldGenerateFlattenCondition(){
+    def void testGenerateFlattenCondition(){
         val python = '''
               type C: <"Test type C">
                 field4 int (1..1) <"Test int field 4">
@@ -845,7 +843,7 @@ class PythonExpressionGeneratorTest {
     }
     
     @Test
-    def void shouldGenerateBinContainsCondition(){
+    def void testGenerateBinContainsCondition(){
         val python = '''
               enum C: <"Test type C">
                 field4 <"Test enum field 4">
@@ -943,7 +941,7 @@ class PythonExpressionGeneratorTest {
     }
     
        @Test
-    def void shouldGenerateBinDisjointCondition(){
+    def void testGenerateBinDisjointCondition(){
         val python = '''
               type Test: <"Test disjoint binary expression condition">
                 field1 string (1..1) <"Test string field1">
@@ -998,7 +996,7 @@ class PythonExpressionGeneratorTest {
     }
     
     @Test
-    def void shouldGenerateBinJoinCondition(){
+    def void testGenerateBinJoinCondition(){
         val python = '''
               type Test: <"Test join binary expression condition">
                 field1 string (1..1) <"Test string field1">

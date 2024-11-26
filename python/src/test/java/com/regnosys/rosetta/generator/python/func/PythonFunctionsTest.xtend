@@ -688,7 +688,7 @@ class PythonFunctionsTest {
         type FloatingRateOption: <"Specification of a floating rate option as a floating rate index and tenor.">
             value int(1..1)
         
-        type ObservationIdentifier:	<"Defines the parameters needed to uniquely identify a piece of data among the population of all available market data.">
+        type ObservationIdentifier: <"Defines the parameters needed to uniquely identify a piece of data among the population of all available market data.">
             observable Observable (1..1) <"Represents the asset or rate to which the observation relates.">
             observationDate date (1..1) <"Specifies the date value to use when resolving the market data.">
         

@@ -75,9 +75,8 @@ class ChoiceAliasGeneratorTest {
             attr int (1..1)
         '''.generatePython
 
-        println('##### testChoiceAliasGenerator\n' + pythonCode)
-
-/*		val classes = code.compileToClasses
+        /*
+        val classes = code.compileToClasses
         println ('***** function generator test dan 2 - Check1')
         val Check1 = classes.createFunc("Check1")
         println ('***** function generator test dan 2 - create fooBar1')
@@ -101,7 +100,8 @@ class ChoiceAliasGeneratorTest {
             })
         })
         println ('***** function generator test dan 2 - Check1 assert -1')
-        assertEquals(-1, Check1.invokeFunc(Integer, #[fooBar3]))*/
+        assertEquals(-1, Check1.invokeFunc(Integer, #[fooBar3]))
+        */
     }
     def generatePython(CharSequence model) {
         val m = model.parseRosettaWithNoErrors

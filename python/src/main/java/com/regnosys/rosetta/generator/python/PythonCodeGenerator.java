@@ -27,15 +27,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class PythonCodeGenerator extends AbstractExternalGenerator {
-	private static final Logger LOGGER = LoggerFactory.getLogger(PythonCodeGenerator.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PythonCodeGenerator.class);
 
-    @Inject PythonModelObjectGenerator pojoGenerator;
-    @Inject PythonFunctionGenerator funcGenerator;
-    @Inject PythonEnumGenerator enumGenerator;
+    @Inject
+    PythonModelObjectGenerator pojoGenerator;
+    @Inject
+    PythonFunctionGenerator funcGenerator;
+    @Inject
+    PythonEnumGenerator enumGenerator;
 
     private List<String> subfolders;
     private AtomicReference<String> previousNamespace;
     private static String namespace;
+
     public PythonCodeGenerator() {
         super("Python");
     }
@@ -43,16 +47,15 @@ public class PythonCodeGenerator extends AbstractExternalGenerator {
     @Override
     public Map<String, ? extends CharSequence> beforeAllGenerate(ResourceSet set,
             Collection<? extends RosettaModel> models, String version) {
-        subfolders        = new ArrayList<String>();
+        subfolders = new ArrayList<String>();
         previousNamespace = new AtomicReference<>("");
-        namespace         = null;
+        namespace = null;
         return Collections.emptyMap();
     }
 
     @Override
-    public Map<String, ? extends CharSequence> generate(Resource resource, 
-                                                        RosettaModel model,
-                                                        String version) {
+    public Map<String, ? extends CharSequence> generate(Resource resource, RosettaModel model,
+            String version) {
         String cleanVersion = cleanVersion(version);
 
         Map<String, CharSequence> result = new HashMap<>();
@@ -60,26 +63,23 @@ public class PythonCodeGenerator extends AbstractExternalGenerator {
         List<Data> rosettaClasses = model.getElements().stream().filter(e -> e instanceof Data)
                 .map(Data.class::cast).collect(Collectors.toList());
 
-        List<RosettaMetaType> metaTypes =
-                model.getElements().stream().filter(RosettaMetaType.class::isInstance)
-                        .map(RosettaMetaType.class::cast).collect(Collectors.toList());
+        List<RosettaMetaType> metaTypes = model.getElements().stream()
+                .filter(RosettaMetaType.class::isInstance).map(RosettaMetaType.class::cast)
+                .collect(Collectors.toList());
 
-        List<RosettaEnumeration> rosettaEnums =
-                model.getElements().stream().filter(RosettaEnumeration.class::isInstance)
-                        .map(RosettaEnumeration.class::cast).collect(Collectors.toList());
+        List<RosettaEnumeration> rosettaEnums = model.getElements().stream()
+                .filter(RosettaEnumeration.class::isInstance).map(RosettaEnumeration.class::cast)
+                .collect(Collectors.toList());
 
-        List<Function> rosettaFunctions =
-                model.getElements().stream().filter(t -> Function.class.isInstance(t))
-                        .map(Function.class::cast).collect(Collectors.toList());
+        List<Function> rosettaFunctions = model.getElements().stream()
+                .filter(t -> Function.class.isInstance(t)).map(Function.class::cast)
+                .collect(Collectors.toList());
 
-        if (rosettaClasses.size() > 0 ||
-                metaTypes.size () > 0 ||
-                rosettaEnums.size() > 0 ||
-                rosettaFunctions.size() > 0) {
+        if (rosettaClasses.size() > 0 || metaTypes.size() > 0 || rosettaEnums.size() > 0 || rosettaFunctions.size() > 0) {
             if (!subfolders.contains(model.getName())) {
                 subfolders.add(model.getName());
             }
-            if (rosettaFunctions.size()> 0 && !subfolders.contains(model.getName() + ".functions")) {
+            if (rosettaFunctions.size() > 0 && !subfolders.contains(model.getName() + ".functions")) {
                 subfolders.add(model.getName() + ".functions");
             }
         }
@@ -109,8 +109,7 @@ public class PythonCodeGenerator extends AbstractExternalGenerator {
 
     @Override
     public Map<String, ? extends CharSequence> afterAllGenerate(ResourceSet set,
-                                                                Collection<? extends RosettaModel> models, 
-                                                                String version) {
+            Collection<? extends RosettaModel> models, String version) {
         // prep to save the resulting generated python for saving to the file
         String cleanVersion = cleanVersion(version); // get a python appropriate version #
         Map<String, CharSequence> result = new HashMap<>();
@@ -125,7 +124,8 @@ public class PythonCodeGenerator extends AbstractExternalGenerator {
             }
         }
         if (namespace != null) {
-            result.put("pyproject.toml", PythonModelGeneratorUtil.createPYProjectTomlFile(namespace, cleanVersion));
+            result.put("pyproject.toml",
+                    PythonModelGeneratorUtil.createPYProjectTomlFile(namespace, cleanVersion));
         }
         return result;
     }
@@ -145,13 +145,16 @@ public class PythonCodeGenerator extends AbstractExternalGenerator {
     }
 
     private Map<String, String> generateWorkspaces(List<String> workspaces, String version) {
-        // generate the expected python structure - add __init__.py, version and py.typed
+        // generate the expected python structure - add __init__.py, version and
+        // py.typed
 
         Map<String, String> result = new HashMap<>();
 
         for (String workspace : workspaces) {
-            result.put(PythonModelGeneratorUtil.toPyFileName(workspace, "__init__"), PythonModelGeneratorUtil.createTopLevelInitFile(version));
-            result.put(PythonModelGeneratorUtil.toPyFileName(workspace, "version"), PythonModelGeneratorUtil.createVersionFile(version));
+            result.put(PythonModelGeneratorUtil.toPyFileName(workspace, "__init__"),
+                    PythonModelGeneratorUtil.createTopLevelInitFile(version));
+            result.put(PythonModelGeneratorUtil.toPyFileName(workspace, "version"),
+                    PythonModelGeneratorUtil.createVersionFile(version));
             result.put(PythonModelGeneratorUtil.toFileName(workspace, "py.typed"), "");
         }
 
@@ -169,7 +172,8 @@ public class PythonCodeGenerator extends AbstractExternalGenerator {
                 for (int j = 1; j <= i; j++) {
                     keyBuilder.append(".").append(parts[j]);
                 }
-                String key = PythonModelGeneratorUtil.toPyFileName(keyBuilder.toString(), "__init__");
+                String key = PythonModelGeneratorUtil.toPyFileName(keyBuilder.toString(),
+                        "__init__");
                 result.putIfAbsent(key, " ");
             }
         }

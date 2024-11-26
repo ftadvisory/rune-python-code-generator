@@ -40,10 +40,8 @@ class PythonFilesGeneratorTest {
     @Inject PythonCodeGenerator generator
 
     @Inject extension ParseHelper<RosettaModel>
-    @Inject extension ModelHelper
     
-    @Inject
-    Provider<XtextResourceSet> resourceSetProvider;
+    @Inject Provider<XtextResourceSet> resourceSetProvider;
 
     def private Properties getProperties () throws Exception {
         var reader     = new MavenXpp3Reader();
@@ -67,11 +65,11 @@ class PythonFilesGeneratorTest {
         // Assuming 'generatedFiles' is a HashMap<String, CharSequence>
         for (entry : generatedFiles.entrySet) {
             // Split the key into its components and replace '.' with the file separator
-            val filePath	 = entry.key
+            val filePath     = entry.key
             val fileContents = entry.value.toString
-            val outputPath   = Path.of(pythonTgtPath + File.separator + filePath)
+            val outputPath  = Path.of(pythonTgtPath + File.separator + filePath)
             Files.createDirectories(outputPath.parent);
-            Files.write(outputPath, fileContents.getBytes(StandardCharsets.UTF_8))		
+            Files.write(outputPath, fileContents.getBytes(StandardCharsets.UTF_8))
         }
         LOGGER.info("Write Files ... wrote: {}", generatedFiles.size ())
         
