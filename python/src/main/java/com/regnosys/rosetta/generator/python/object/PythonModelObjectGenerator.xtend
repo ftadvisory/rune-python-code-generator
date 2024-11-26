@@ -63,7 +63,6 @@ class PythonModelObjectGenerator {
                 helperClass += "[" + basicType + "]";
             }
             basicType = helperClass + " | " + basicType;
-            println('----- PythonModelObjectGenerator::toPythonType ... helperClass:' + helperClass + ' basicType:' + basicType)
         }
         return basicType
     }

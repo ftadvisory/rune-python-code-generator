@@ -77,9 +77,7 @@ class ChoiceAliasGeneratorTest {
 
         /*
         val classes = code.compileToClasses
-        println ('***** function generator test dan 2 - Check1')
         val Check1 = classes.createFunc("Check1")
-        println ('***** function generator test dan 2 - create fooBar1')
         val fooBar1 = classes.createInstanceUsingBuilder("Foo", #{
             "Bar1" -> classes.createInstanceUsingBuilder("Bar1", #{
                 "Deep1" -> classes.createInstanceUsingBuilder("Deep1", #{
@@ -87,9 +85,7 @@ class ChoiceAliasGeneratorTest {
                 })
             })
         })
-        println ('***** function generator test dan 2 - Check1 assert 42')
         assertEquals(42, Check1.invokeFunc(Integer, #[fooBar1]))
-        println ('***** function generator test dan 2 - create fooBar3')
         val fooBar3 = classes.createInstanceUsingBuilder("Foo", #{
             "Bar3" -> classes.createInstanceUsingBuilder("Bar3", #{
                 "Bar2" -> classes.createInstanceUsingBuilder("Bar2", #{
@@ -99,7 +95,6 @@ class ChoiceAliasGeneratorTest {
                 })
             })
         })
-        println ('***** function generator test dan 2 - Check1 assert -1')
         assertEquals(-1, Check1.invokeFunc(Integer, #[fooBar3]))
         */
     }

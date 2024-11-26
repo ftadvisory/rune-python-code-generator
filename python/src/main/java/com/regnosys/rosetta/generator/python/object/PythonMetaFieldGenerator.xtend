@@ -27,7 +27,6 @@ class PythonMetaFieldGenerator {
     @Inject extension RObjectFactory
 
     def generateMetaFields(List<Data> rosettaClasses, Iterable<RosettaMetaType> metaTypes, String version) {
-        println('----- generateMetaFields #### HERE')
 /*
  * 
          val metaFieldsImports = generateMetaFieldsImports.toString
