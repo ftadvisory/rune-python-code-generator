@@ -8,7 +8,6 @@ import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.extensions.InjectionExtension
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.^extension.ExtendWith
-
 import static org.junit.jupiter.api.Assertions.*
 
 @ExtendWith(InjectionExtension)
@@ -18,8 +17,6 @@ class DataRuleGeneratorTest {
 
     @Inject extension ModelHelper
     @Inject PythonCodeGenerator generator;
-
-    
 
     @Test
     def void shouldGenerateConditionWithIfElseIf() {
@@ -72,7 +69,6 @@ class DataRuleGeneratorTest {
                         if bar="Y" then baz exists
                         else if (bar="I" or bar="N") then baz is absent
         '''.generatePython
-
         
         val expected=
         '''
@@ -103,11 +99,8 @@ class DataRuleGeneratorTest {
                 
                 return if_cond_fn(rosetta_attr_exists(rosetta_resolve_attr(self, "bar")), _then_fn0, _else_fn0)
         '''
-        
-        
         assertTrue(python.toString.contains(expected))
     }
-
 
     @Test
     def void quoteExists() {
@@ -149,7 +142,6 @@ class DataRuleGeneratorTest {
         
         assertTrue(python.toString.contains(expectedQuote))
         assertTrue(python.toString.contains(expectedQuotePrice))
-        
     }
 
     @Test
@@ -171,7 +163,6 @@ class DataRuleGeneratorTest {
                     price3 number (0..1)
 
         '''.generatePython
-
         
         val expectedQuote=
         '''
@@ -200,7 +191,6 @@ class DataRuleGeneratorTest {
         
         assertTrue(python.toString.contains(expectedQuote))
         assertTrue(python.toString.contains(expectedQuotePrice))
-        
     }
 
     @Test
@@ -215,8 +205,6 @@ class DataRuleGeneratorTest {
                 type QuotePrice:
                     bidPrice number (0..1)
         '''.generatePython
-
-    
         
         val expectedQuote=
         '''
@@ -244,7 +232,6 @@ class DataRuleGeneratorTest {
         
         assertTrue(python.toString.contains(expectedQuote))
         assertTrue(python.toString.contains(expectedQuotePrice))
-        
     }
     
     @Test
@@ -280,9 +267,7 @@ class DataRuleGeneratorTest {
                 return if_cond_fn(rosetta_attr_exists(rosetta_resolve_attr(self, "price")), _then_fn0, _else_fn0)
         '''
 
-
         assertTrue(python.toString.contains(expectedQuote))
-
     }
 
     @Test
@@ -302,7 +287,6 @@ class DataRuleGeneratorTest {
                         then Foo( price ) = 5.0
                         else True
         '''.generatePython
-
         
         val expectedQuoute=
         '''
@@ -430,20 +414,18 @@ class DataRuleGeneratorTest {
         val python = '''
             type CondTest:
                 multiAttr number (0..*)
-        
+    
                 condition:
                     multiAttr count >= 0
         '''.generatePython
         
-        val expected=
-    '''
-    class CondTest(BaseDataClass):
-        multiAttr: List[Decimal] = Field([], description="")
-        
-        @rosetta_condition
-        def condition_0_(self):
-            item = self
-            return all_elements(rosetta_count(rosetta_resolve_attr(self, "multiAttr")), ">=", 0)
+        val expected = '''class CondTest(BaseDataClass):
+    multiAttr: List[Decimal] = Field([], description="")
+    
+    @rosetta_condition
+    def condition_0_(self):
+        item = self
+        return all_elements(rosetta_count(rosetta_resolve_attr(self, "multiAttr")), ">=", 0)
     '''
         assertTrue(python.toString.contains(expected))
     }
@@ -490,9 +472,7 @@ class DataRuleGeneratorTest {
 
         assertTrue(python.toString.contains(expectedFoo))
         assertTrue(python.toString.contains(expectedBar))
-
     }
-
 
     @Test
     def void shouldCheckInheritedCondition() {

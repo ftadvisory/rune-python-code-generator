@@ -20,6 +20,21 @@ class PythonExpressionGeneratorTest {
     @Inject PythonCodeGenerator generator;
     
     @Test
+    def void testGenerateSwitch() {
+        try {
+            val python = '''type FooTest:
+            a int (1..1)
+            condition Test:
+                a switch
+                    1 then True,
+                    2 then True,
+                    default False'''.generatePython()
+        } catch(Exception ex){
+            assertTrue(ex.getMessage.contains("Unsupported expression type of SwitchOperationImpl"));
+        }
+    }
+
+    @Test
     def void testGenerateChoiceCondition() {
         val python = '''type Test1:<"Test choice condition.">
             field1 string (0..1) <"Test string field 1">
@@ -75,7 +90,7 @@ class PythonExpressionGeneratorTest {
         return self.check_one_of_constraint('field1', necessity=True)'''
         assertTrue(python.toString.contains(expected))
     }
-    
+
     @Test
     def void testGenerateIfThenCondition() {
         val python = '''type Test1: <"Test if-then condition.">

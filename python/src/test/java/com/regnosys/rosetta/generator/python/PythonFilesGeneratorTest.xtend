@@ -89,14 +89,14 @@ class PythonFilesGeneratorTest {
         //  - produce new python from the dsl definitions 
         //  - delete any existing directory and create a new one
         val properties    = getProperties ()
-        val rosettaSource = properties.getProperty (rosettaSourceName) as String
+        val rosettaSource = properties.getProperty (rosettaSourceName)
         if (rosettaSource === null){
             throw new Exception ('Initialization failure: source Rosetta path not specified')
         }
         if (!Files.exists(Paths.get(rosettaSource))){
             throw new Exception ("Unable to generate Python from non-existant Rosetta source directory: " + rosettaSource)
         }
-        val outputPath = properties.getProperty (outputPathName) as String
+        val outputPath = properties.getProperty (outputPathName)
         if (outputPath === null) {
             throw new Exception('Initialization failure: Python target not specified')
         }
