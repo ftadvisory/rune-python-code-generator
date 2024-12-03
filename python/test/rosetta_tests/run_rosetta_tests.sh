@@ -24,7 +24,7 @@ $PYEXE -m pip install $MYPATH/$ROSETTARUNTIMEDIR/rosetta_runtime-2.1.0-py3-none-
 
 cd $MYPATH/$PYTHONUNITTESTDIR
 $PYEXE -m pip wheel --no-deps --only-binary :all: . || processError
-$PYEXE -m pip install python_rosetta-0.0.0-py3-none-any.whl
+$PYEXE -m pip install python_rosetta_dsl-0.0.0-py3-none-any.whl
 
 # run tests
 pytest -p no:cacheprovider $MYPATH
